@@ -1,0 +1,56 @@
+.login-screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+}
+
+.left-section {
+    width: 50vw !important;
+    height: 100%;
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    padding: 0 130px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.right-section {
+    width: 50vw !important;
+    height: 100%;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 40px;
+    padding: 0px 160px;
+}
+
+.InputContainer{
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.InputsContainer{
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    width: 100%;
+}
+
+.inputBox{
+    width: 100%;
+    padding: 10px 15px;
+}
+
+.forgotpass{
+    color: var(--color-grey);
+}

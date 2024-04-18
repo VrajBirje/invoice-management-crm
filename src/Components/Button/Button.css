@@ -1,0 +1,75 @@
+.button {
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: var(--color-primary);
+    padding: 10px 20px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: fit-content;
+}
+.button svg{
+    fill: white;
+}
+
+.button:hover {
+    background-color: var(--color-secondary-2);
+}
+.button:active {
+    background-color: var(--color-primary-main);
+}
+.button:disabled{
+    background-color: var(--color-light-grey);
+}
+
+.smallButton {
+    color: #fff;
+}
+
+.mediumButton {
+    color: #fff;
+}
+.yellowButton {
+    color: #fff;
+    background-color: var(--color-secondary-2);
+}
+.yellowButton:hover {
+    color: #fff;
+    background-color: var(--color-primary-main);
+}
+
+.largeButton {
+    color: #fff;
+}
+
+.mediumOutline{
+    border: solid 1px var(--color-primary2);
+    color: var(--color-text);
+    background-color: transparent;
+}
+.mediumOutline svg{
+    fill: var(--color-primary-main);
+}
+.mediumOutline:hover{
+    background-color: var(--color-primary-main);
+    color: white;
+}
+.mediumOutline:hover svg {
+    fill: white;
+}
+
+.enquiry1:hover {
+    background-color: #000000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #C7C954;
+}
+
+.login:hover {
+    border: 1px solid #000000;
+}
+
+.button:active {
+    transform: translateY(1px);
+}
