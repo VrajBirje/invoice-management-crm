@@ -1,0 +1,50 @@
+.topbar-container {
+    width: 97%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 20px 10px 20px;
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+    background-color: var(--color-background);
+}
+
+.topbar-profile-pic {
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-primary2);
+    border-radius: 50%;
+}
+
+.topbar-icons {
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-grey);
+}
+
+.topbar-profile-textContainer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.topbar-profile-role{
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--color-grey);
+}
+
+.topbar-right{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}

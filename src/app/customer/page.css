@@ -1,0 +1,18 @@
+.customer-layout{
+    display: flex;
+    gap:0;
+    width: 100vw;
+    background-color: var(--color-background);
+}
+
+.mainpage-container{
+    height: 100%;
+    width: 95%;
+    background-color: var(--color-background);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+}

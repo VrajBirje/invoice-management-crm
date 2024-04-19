@@ -13,12 +13,15 @@
 .button svg{
     fill: white;
 }
+.button:hover svg{
+    fill: var(--color-orange);
+}
 
 .button:hover {
-    background-color: var(--color-secondary-2);
+    background-color: var(--color-orange);
 }
 .button:active {
-    background-color: var(--color-primary-main);
+    background-color: var(--color-primary);
 }
 .button:disabled{
     background-color: var(--color-light-grey);

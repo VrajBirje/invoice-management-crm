@@ -5,10 +5,11 @@ import Topbar from '@/Components/shared/Topbar/topbar'
 
 export default function page() {
   return (
-    <div className='dashboard-layout'>
-      <Sidebar active="Dashboard" />
+    <div className='customer-layout'>
+      <Sidebar active="Customer" />
       <div className="mainpage-container">
-        <Topbar name="Dashboard" />
+        <Topbar name="Customer" />
+        
       </div>
     </div>
   )

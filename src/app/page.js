@@ -1,6 +1,6 @@
 import Image from "next/image";
 import './login.css'
-import Button from "@/Components/Button/Button";
+import Button from "@/Components/common/Button/Button";
 
 export default function Home() {
   return (
@@ -11,7 +11,7 @@ export default function Home() {
         <Image src="/Illustration.png" width={400} height={319}></Image>
       </div>
       <div className="right-section">
-        <h4>Welcome to Hoarway Invoice !!</h4>
+        <h5>Welcome to Hoarway Invoice !!</h5>
         <div className="InputsContainer">
           <div className="InputContainer">
             <div className="label">Email</div>
