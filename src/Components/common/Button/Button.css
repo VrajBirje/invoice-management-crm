@@ -10,20 +10,24 @@
     gap: 10px;
     width: fit-content;
 }
-.button svg{
+
+.button svg {
     fill: white;
 }
-.button:hover svg{
-    fill: var(--color-orange);
+
+.button:hover svg {
+    fill: var(--color-main);
 }
 
 .button:hover {
     background-color: var(--color-orange);
 }
+
 .button:active {
     background-color: var(--color-primary);
 }
-.button:disabled{
+
+.button:disabled {
     background-color: var(--color-light-grey);
 }
 
@@ -34,10 +38,12 @@
 .mediumButton {
     color: #fff;
 }
+
 .yellowButton {
     color: #fff;
     background-color: var(--color-secondary-2);
 }
+
 .yellowButton:hover {
     color: #fff;
     background-color: var(--color-primary-main);
@@ -47,18 +53,32 @@
     color: #fff;
 }
 
-.mediumOutline{
-    border: solid 1px var(--color-primary2);
-    color: var(--color-text);
+.round-outline {
+    border: solid 2px var(--color-purple);
+    color: var(--color-purple);
+    border-radius: 40px !important;
     background-color: transparent;
+    padding: 8px 20px;
 }
-.mediumOutline svg{
+.round-outline svg{
+    fill: var(--color-purple)
+}
+
+.round {
+    /* border: 1px solid var(--color-primary2); */
+    color: var(--color-white);
+    border-radius: 40px !important;
+}
+
+.mediumOutline svg {
     fill: var(--color-primary-main);
 }
-.mediumOutline:hover{
+
+.mediumOutline:hover {
     background-color: var(--color-primary-main);
     color: white;
 }
+
 .mediumOutline:hover svg {
     fill: white;
 }

@@ -12,22 +12,32 @@ export default function Button({ onClick, children, variant, prefixIcon, suffixI
                 </div>
             )}
             {variant === 'mediumButton' && (
-                <div className="label5">
+                <div className="label2">
+                    {children}
+                </div>
+            )}
+            {variant === 'round' && (
+                <div className="label">
+                    {children}
+                </div>
+            )}
+            {variant === 'round-outline' && (
+                <div className="label">
                     {children}
                 </div>
             )}
             {variant === 'mediumOutline' && (
-                <div className="label5">
+                <div className="label2">
                     {children}
                 </div>
             )}
             {variant === 'yellowButton' && (
-                <div className="label5">
+                <div className="label2">
                     {children}
                 </div>
             )}
             {variant === 'largeButton' && (
-                <div className="label4">
+                <div className="label2">
                     {children}
                 </div>
             )}

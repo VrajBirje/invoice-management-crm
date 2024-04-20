@@ -1,0 +1,24 @@
+.searchBox {
+    width: 100%;
+}
+
+.searchInput {
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid var(--color-light-grey);
+    border-radius: 40px;
+    font-size: 12px;
+    background-color: white;
+    background-image: url('/search-normal.png');
+    background-position: 8px 8px;
+    background-repeat: no-repeat;
+    padding: 9px 10px 9px 40px;
+}
+.searchInput:focus{
+    outline: none !important;
+    border:2px solid var(--color-light-grey);
+}
+
+.searchBox input[type=text]:focus {
+    border: 2px solid #c1c1c1;
+}
