@@ -83,9 +83,9 @@ export default function page() {
     };
     return (
         <div className='customer-layout'>
-            <Sidebar active="Customer" settingsBool={false} masterBool={false} />
+            <Sidebar active="Items" settingsBool={false} masterBool={false}/>
             <div className="mainpage-container">
-                <Topbar name="Customer" />
+                <Topbar name="Add Item" />
                 <div className="main-section">
                     <div className="main-section-top">
                         <div className="main-section-search">
@@ -96,7 +96,7 @@ export default function page() {
                                 Newest
                             </Button>
                             <Button variant='round' prefixIcon={<RiAddFill size={20} />}>
-                                New Customer
+                                New Sub-Category
                             </Button>
                         </div>
                     </div>
@@ -108,24 +108,12 @@ export default function page() {
                                         <Checkbox />
                                     </th>
                                     <th>
-                                        Customer Name
+                                        Sub-Category
                                     </th>
                                     <th>
-                                        Id
+                                        Category
                                     </th>
-                                    <th>
-                                        Type
-                                    </th>
-                                    <th>
-                                        Company
-                                    </th>
-                                    <th>
-                                        Status
-                                    </th>
-                                    <th>
-                                        Contact
-                                    </th>
-                                    <th>
+                                    <th style={{textAlign:"center"}}>
                                         Action
                                     </th>
                                 </tr>
@@ -139,22 +127,11 @@ export default function page() {
                                         <td className='tableName'>
                                             {item.name}
                                         </td>
-                                        <td className='tableId'>#{item.phoneNumber}</td>
-                                        <td className='label2'>Individual</td>
-                                        <td className='label2'>Hoarway</td>
-                                        <td className='label2'>Active</td>
-                                        <td className='actionsTable'>
-                                            <div className="table-contacts">
-                                                <div className="table-contact">
-                                                    <FiPhone size={19} />
-                                                </div>
-                                                <div className="table-contact">
-                                                    <LuMail size={19} />
-                                                </div>
-                                            </div>
+                                        <td className='label2'>
+                                            {item.name}
                                         </td>
                                         <td className='actionsTable'>
-                                            <div className="table-contacts">
+                                            <div className="table-contacts" style={{justifyContent:"center"}}>
                                                 <MdDeleteOutline size={22} />
                                                 <LuClipboardEdit size={22} />
                                             </div>

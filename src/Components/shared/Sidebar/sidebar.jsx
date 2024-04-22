@@ -8,9 +8,9 @@ import { BsClipboardData } from "react-icons/bs";
 import { LuSettings } from "react-icons/lu";
 import { IoIosArrowDown } from "react-icons/io";
 
-export default function Sidebar({ active }) {
-    const [master, setMaster] = useState(false)
-    const [settings, setSettings] = useState(false)
+export default function Sidebar({ active , settingsBool , masterBool }) {
+    const [master, setMaster] = useState(masterBool)
+    const [settings, setSettings] = useState(settingsBool)
     const onMasterClick = () => {
         setMaster(master => !master);
         setSettings(false)

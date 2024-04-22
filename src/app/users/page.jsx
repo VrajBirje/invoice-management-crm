@@ -83,9 +83,9 @@ export default function page() {
     };
     return (
         <div className='customer-layout'>
-            <Sidebar active="Customer" settingsBool={false} masterBool={false} />
+            <Sidebar active="Users" settingsBool={true} masterBool={false}/>
             <div className="mainpage-container">
-                <Topbar name="Customer" />
+                <Topbar name="Users" />
                 <div className="main-section">
                     <div className="main-section-top">
                         <div className="main-section-search">
@@ -96,7 +96,7 @@ export default function page() {
                                 Newest
                             </Button>
                             <Button variant='round' prefixIcon={<RiAddFill size={20} />}>
-                                New Customer
+                                New User
                             </Button>
                         </div>
                     </div>
@@ -108,19 +108,16 @@ export default function page() {
                                         <Checkbox />
                                     </th>
                                     <th>
-                                        Customer Name
+                                        Name
                                     </th>
                                     <th>
                                         Id
                                     </th>
                                     <th>
-                                        Type
+                                        Role
                                     </th>
                                     <th>
                                         Company
-                                    </th>
-                                    <th>
-                                        Status
                                     </th>
                                     <th>
                                         Contact
@@ -140,9 +137,8 @@ export default function page() {
                                             {item.name}
                                         </td>
                                         <td className='tableId'>#{item.phoneNumber}</td>
-                                        <td className='label2'>Individual</td>
+                                        <td className='label2'>Sales Person</td>
                                         <td className='label2'>Hoarway</td>
-                                        <td className='label2'>Active</td>
                                         <td className='actionsTable'>
                                             <div className="table-contacts">
                                                 <div className="table-contact">

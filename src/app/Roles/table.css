@@ -1,0 +1,93 @@
+#table {
+    width: 100%;
+}
+
+
+th {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary);
+    padding: 10px 20px 10px 25px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-grey);
+}
+
+td {
+    padding: 10px 20px 10px 25px;
+    border-bottom: 1px solid var(--color-grey);
+    color: var(--color-primary);
+}
+
+.tableName {
+    color: var(--color-primary);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.tableId {
+    color: var(--color-purple);
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.table-contact {
+    padding: 5px;
+    ;
+    background-color: var(--color-primary2);
+    color: var(--color-purple);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+}
+
+.table-contacts {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.TableBottom {
+    width: 97%;
+    display: flex;
+    justify-content: space-between;
+    padding: 50px 20px;
+}
+
+.tablePageStatus {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pagestatus-no {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.TablePaginationButtons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.TablePaginationButton {
+    background-color: transparent;
+    border: none;
+    color: var(--color-grey);
+}
+
+.TablePaginationButtonNumber {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--color-grey);
+    color: var(--color-grey);
+}
+
+.TablePaginationButtonNumber:disabled{
+    background-color: var(--color-purple);
+    color: var(--color-white);
+    border: none;
+}
