@@ -12,6 +12,7 @@ import { GrDocumentText } from "react-icons/gr";
 import { RiMoneyDollarBoxLine } from "react-icons/ri";
 import { HiOutlineLogout } from "react-icons/hi";
 import './sidebarNavigator.css'
+import Link from 'next/link';
 // import { useNavigate } from 'react-router-dom';
 
 function getIcon(iconName) {
@@ -44,17 +45,49 @@ function getIcon(iconName) {
             return null;
     }
 }
+function navigateSidebar(iconName) {
+    switch (iconName) {
+        case "Dashboard":
+            return "/dashboard";
+        case "Customer":
+            return "/customer";
+        case "Items":
+            return "/Items";
+        case "Category":
+            return "/category";
+        case "Sub-Category":
+            return "/subcategory";
+        case "Users":
+            return "/users";
+        case "Roles":
+            return "/Roles";
+        case "Quotation":
+            return "/quotation";
+        case "Invoice":
+            return "/invoice";
+        case "Delivery Challan":
+            return "/dashboard";
+        case "Payments Recieved":
+            return "/dashboard";
+        case "Log Out":
+            return "/dashboard";
+        default:
+            return null;
+    }
+}
 
 export default function SidebarNavigator({ name, active }) {
     // const navigate = useNavigate();
 
 
     return (
-        <div className={active ? "sidebar-navigator active-sidebar-navigator" : "sidebar-navigator"}>
-            {getIcon(name)}
-            <div className="label2">
-                {name}
+        <Link href={navigateSidebar(name)}>
+            <div className={active ? "sidebar-navigator active-sidebar-navigator" : "sidebar-navigator"}>
+                {getIcon(name)}
+                <div className="label2">
+                    {name}
+                </div>
             </div>
-        </div>
+        </Link>
     )
 }

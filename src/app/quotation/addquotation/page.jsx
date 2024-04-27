@@ -8,20 +8,68 @@ import { IoIosArrowDown } from "react-icons/io";
 import { HiOutlineDocumentArrowUp } from "react-icons/hi2";
 import './page.css'
 import Button from '@/Components/common/Button/Button';
+import items from '@/json/items';
 
 export default function page() {
-    const [tableRows, setTableRows] = useState([{ id: 1 }]);
+    const [tableRows, setTableRows] = useState([{ id: 1, item: items[0], quantity: 1, discount: 0, discountType: 'per', amount: items[0].price }]);
+    const [totalAmount, setTotalAmount] = useState(tableRows[0].amount);
 
-    // Function to add a new row to the table
     const addRow = () => {
-        const newRow = { id: tableRows.length + 1 };
+        const newRow = { id: tableRows.length + 1, item: items[0], quantity: 1, discount: 0, discountType: 'per', amount: items[0].price };
         setTableRows([...tableRows, newRow]);
+    };
+
+    const handleItemChange = (index, event) => {
+        const selectedItem = items.find(item => item.name === event.target.value);
+        const updatedRows = [...tableRows];
+        updatedRows[index].item = selectedItem;
+        updatedRows[index].amount = selectedItem.price * updatedRows[index].quantity - calculateDiscount(selectedItem.price, updatedRows[index].quantity, updatedRows[index].discount, updatedRows[index].discountType);
+        setTableRows(updatedRows);
+        updateTotalAmount(updatedRows);
+    };
+
+    const handleQuantityChange = (index, event) => {
+        const updatedRows = [...tableRows];
+        updatedRows[index].quantity = event.target.value;
+        updatedRows[index].amount = updatedRows[index].item.price * event.target.value - calculateDiscount(updatedRows[index].item.price, event.target.value, updatedRows[index].discount, updatedRows[index].discountType);
+        setTableRows(updatedRows);
+        updateTotalAmount(updatedRows);
+    };
+
+    const handleDiscountChange = (index, event) => {
+        const updatedRows = [...tableRows];
+        updatedRows[index].discount = event.target.value;
+        updatedRows[index].amount = updatedRows[index].item.price * updatedRows[index].quantity - calculateDiscount(updatedRows[index].item.price, updatedRows[index].quantity, event.target.value, updatedRows[index].discountType);
+        setTableRows(updatedRows);
+        updateTotalAmount(updatedRows);
+    };
+
+    const handleDiscountTypeChange = (index, event) => {
+        const updatedRows = [...tableRows];
+        updatedRows[index].discountType = event.target.value;
+        updatedRows[index].amount = updatedRows[index].item.price * updatedRows[index].quantity - calculateDiscount(updatedRows[index].item.price, updatedRows[index].quantity, updatedRows[index].discount, event.target.value);
+        setTableRows(updatedRows);
+        updateTotalAmount(updatedRows);
+    };
+
+    const calculateDiscount = (price, quantity, discount, discountType) => {
+        if (discountType === 'per') {
+            return (price * quantity * discount) / 100;
+        } else if (discountType === 'num') {
+            return discount;
+        }
+        return 0;
+    };
+
+    const updateTotalAmount = (rows) => {
+        const total = rows.reduce((acc, curr) => acc + curr.amount, 0);
+        setTotalAmount(total);
     };
     return (
         <div className='customer-layout'>
-            <Sidebar active="Items" settingsBool={false} masterBool={false} />
+            <Sidebar active="Quotation" settingsBool={false} masterBool={false} />
             <div className="mainpage-container">
-                <Topbar name="Add Items" />
+                <Topbar name="Add Quotation" />
                 <div className="main-section">
                     <div className="addcustomer-personaldetails">
                         <div className="personal-details-heading">
@@ -29,13 +77,21 @@ export default function page() {
                         </div>
                         <div className="personaldetails-content">
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field">
+                                <div className="label2 pdetails-field" style={{color:"red"}}>
                                     Customer Name*
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input3' placeholder='select or add a customer' />
-                                        <IoIosArrowDown size={18} className='pdetails-icon2' />
+                                        <select
+                                            type="text"
+                                            name="country"
+                                            className='pdetails-input3'
+                                            placeholder='Mumbai'
+                                        // onChange={handleChange}
+                                        >
+                                            <option value="" disabled selected>Select or add customer</option>
+                                            <option value="value">options</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -51,7 +107,7 @@ export default function page() {
                             </div>
                             <div className="pdetails-dates">
                                 <div className="pdetails-fieldvalue">
-                                    <div className="label2 pdetails-field">
+                                    <div className="label2 pdetails-field" style={{color:"red"}}>
                                         Quote Date*
                                     </div>
                                     <div className="pdetails-value2">
@@ -72,34 +128,31 @@ export default function page() {
                                 </div>
                             </div>
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field">
+                                <div className="label2 pdetails-field" style={{color:"red"}}>
                                     Sales Person*
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input3' placeholder='select or add a user' />
-                                        <IoIosArrowDown size={18} className='pdetails-icon2' />
+                                        <select
+                                            type="text"
+                                            name="country"
+                                            className='pdetails-input3'
+                                            placeholder='Mumbai'
+                                        // onChange={handleChange}
+                                        >
+                                            <option value="" disabled selected>Select or add sales person</option>
+                                            <option value="value">options</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field">
+                                <div className="label2 pdetails-field" style={{color:"red"}}>
                                     Subject
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
                                         <input type="text" className='pdetails-input2' placeholder='Subject' />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field">
-                                    Project
-                                </div>
-                                <div className="pdetails-value2">
-                                    <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input3' placeholder='select or add a customer' />
-                                        <IoIosArrowDown size={18} className='pdetails-icon2' />
                                     </div>
                                 </div>
                             </div>
@@ -138,44 +191,104 @@ export default function page() {
                             <table id='quote-table'>
                                 <thead>
                                     <tr>
-                                        <th style={{ width: "30%" }}>items</th>
-                                        <th>quantity</th>
-                                        <th>rate</th>
-                                        <th>discount</th>
-                                        <th>amount</th>
+                                        <th style={{ width: "30%", textAlign: "left" }}>Items</th>
+                                        <th>Quantity</th>
+                                        <th>Rate</th>
+                                        <th>Discount</th>
+                                        <th>Amount</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                {/* <tbody>
                                     {tableRows.map(count => (
                                         <tr key={count.id}>
                                             <td>
-                                                <input type="text" className='pdetails-input6' />
+                                                <select type="text" className='pdetails-input6' style={{width:"100%"}}>
+                                                    <option value="">items</option>
+                                                </select>
                                             </td>
                                             <td>
-                                                <input type="text" className='pdetails-input5' />
+                                                <input style={{textAlign:"center"}} type="number" className='pdetails-input5' />
                                             </td>
                                             <td>
-                                                <input type="text" className='pdetails-input5' />
+                                                <input style={{textAlign:"center"}} type="number" className='pdetails-input5' />
+                                            </td>
+                                            <td style={{
+                                                display:"flex"
+                                            }}>
+                                                <input style={{textAlign:"center"}} type="number" className='pdetails-input5' />
+                                                <select name="" id="">
+                                                    <option value="per">%</option>
+                                                    <option value="num">₹</option>
+                                                </select>
                                             </td>
                                             <td>
-                                                <input type="text" className='pdetails-input5' />
+                                                <input style={{textAlign:"center"}} type="number" className='pdetails-input5' />
                                             </td>
+                                        </tr>
+                                    ))}
+                                </tbody> */}
+                                <tbody>
+                                    {tableRows.map((row, index) => (
+                                        <tr key={row.id}>
+                                            {/* Select dropdown for item */}
                                             <td>
-                                                <input type="text" className='pdetails-input5' />
+                                                <select id='item'  value={row.item.name} onChange={(e) => handleItemChange(index, e)} className='pdetails-input6' 
+                                                style={{
+                                                    width:"100%",
+                                                    WebkitAppearance:"none",
+                                                    MozAppearance:"none",
+                                                    border:"none"
+                                                }}>
+                                                    {items.map((item, i) => (
+                                                        <option key={i} value={item.name}>{item.name}</option>
+                                                    ))}
+                                                </select>
                                             </td>
+                                            {/* Input for quantity */}
+                                            <td 
+                                            style={{
+                                                    width:"17%",
+                                                }}
+                                            >
+                                                <input type="number" value={row.quantity} onChange={(e) => handleQuantityChange(index, e)} className='pdetails-input5' style={{textAlign:"right"}}/>
+                                            </td>
+                                            <td 
+                                             style={{
+                                                    width:"17%",
+                                                    textAlign:"right",
+                                                    padding:"7px"
+                                                }}
+                                            >{row.item.price}</td>
+                                            {/* Input and select for discount */}
+                                            <td style={{ display: 'flex', alignItems: 'center'}}>
+                                                <input type="number" value={row.discount} onChange={(e) => handleDiscountChange(index, e)} className='pdetails-input5' style={{width:"100%",textAlign:"right"}}/>
+                                                <select value={row.discountType} onChange={(e) => handleDiscountTypeChange(index, e)} style={{ marginLeft: '5px' }}>
+                                                    <option value="per">%</option>
+                                                    <option value="num">₹</option>
+                                                </select>
+                                            </td>
+                                            {/* Display calculated amount */}
+                                            <td
+                                             style={{
+                                                    width:"17%",
+                                                    textAlign:"right",
+                                                    padding:"7px"
+                                                }}
+                                            >{row.amount}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                             <div className='items-2'>
-                                <Button variant='round-outline'onClick={addRow}>
+                                <Button variant='round-outline' onClick={addRow}>
                                     Add a New Row
                                 </Button>
                                 <div className="items-tax">
-                                    
+
                                 </div>
                             </div>
                             <div className="roleBottom">
+                                <div>Total Amount: {totalAmount}</div>
                                 <Button variant='round-outline'>
                                     Cancel
                                 </Button>
@@ -190,4 +303,3 @@ export default function page() {
         </div>
     )
 }
-

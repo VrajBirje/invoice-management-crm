@@ -7,8 +7,47 @@ import { FiPhone } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
 import { HiOutlineDocumentArrowUp } from "react-icons/hi2";
 import './page.css'
+import Button from '@/Components/common/Button/Button';
 
-export default function page() {
+export default function Page() {
+    // State to store input field values
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        companyName: '',
+        role: '',
+        email: '',
+        phone: '',
+        documents: '',
+        remark: '',
+        address: '',
+        country: '',
+        state: '',
+        city: ''
+    });
+
+    // Function to handle changes in input fields
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    // Function to handle file change
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setFormData(prevState => ({
+            ...prevState,
+            documents: file.name
+        }));
+    };
+
+    // Logging the formData object
+    useEffect(() => {
+        console.log(formData);
+    }, [formData]);
 
     return (
         <div className='customer-layout'>
@@ -18,7 +57,7 @@ export default function page() {
                 <div className="main-section">
                     <div className="addcustomer-personaldetails">
                         <div className="personal-details-heading">
-                            <h6>Persoanal Details</h6>
+                            <h6>Personal Details</h6>
                         </div>
                         <div className="personaldetails-content">
 
@@ -28,10 +67,10 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value">
                                     <div className="pdetails-value-opt">
-                                        <input type="text" className='pdetails-cname' placeholder='First Name' />
+                                        <input type="text" name="firstName" className='pdetails-cname' placeholder='First Name' onChange={handleChange} />
                                     </div>
                                     <div className="pdetails-value-opt">
-                                        <input type="text" className='pdetails-cname' placeholder='Last Name' />
+                                        <input type="text" name="lastName" className='pdetails-cname' placeholder='Last Name' onChange={handleChange} />
                                     </div>
                                 </div>
                             </div>
@@ -41,7 +80,7 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input2' placeholder='Company Name' />
+                                        <input type="text" name="companyName" className='pdetails-input2' placeholder='Company Name' onChange={handleChange} />
                                     </div>
                                 </div>
                             </div>
@@ -51,8 +90,16 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input3' placeholder='abc@gmail.com' />
-                                        <IoIosArrowDown size={18} className='pdetails-icon2' />
+                                        <select
+                                            type="text"
+                                            name="role"
+                                            className='pdetails-input3'
+                                            placeholder='Mumbai'
+                                            onChange={handleChange}
+                                        >
+                                            <option value="value">Role</option>
+                                            <option value="value">options</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +109,7 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input' placeholder='abc@gmail.com' />
+                                        <input type="text" name="email" className='pdetails-input' placeholder='Email' onChange={handleChange} />
                                         <MdMailOutline size={18} className='pdetails-icon' />
                                     </div>
                                 </div>
@@ -73,7 +120,7 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input' placeholder='Mobile' />
+                                        <input type="text" name="phone" className='pdetails-input' placeholder='Phone' onChange={handleChange} />
                                         <FiPhone size={18} className='pdetails-icon' />
                                     </div>
                                 </div>
@@ -86,7 +133,7 @@ export default function page() {
                                 <div className="pdetails-value2">
                                     <div className="pdetials-doc-input">
                                         <div className="pdetails-value-wrapper2">
-                                            <input type="file" className='pdetails-input4' placeholder='abc@gmail.com' />
+                                            <input type="file" name="documents" className='pdetails-input4' placeholder='Select Documents' onChange={handleFileChange} />
                                             <HiOutlineDocumentArrowUp size={18} className='pdetails-icon' />
                                         </div>
                                         <div style={{ color: "#010080" }} className="label5">The file size should be lesser than 5 mb</div>
@@ -99,7 +146,7 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <textarea className='pdetails-input2' placeholder='Company Name' />
+                                        <textarea name="remark" className='pdetails-input2' placeholder='Remark' onChange={handleChange} />
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +154,7 @@ export default function page() {
                     </div>
                     <div className="addcustomer-personaldetails">
                         <div className="personal-details-heading">
-                            <h6>Persoanal Details</h6>
+                            <h6>Address Details</h6>
                         </div>
                         <div className="personaldetails-content">
                             <div className="pdetails-fieldvalue">
@@ -116,7 +163,7 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input2' placeholder='Company Name' />
+                                        <input type="text" name="address" className='pdetails-input2' placeholder='Address' onChange={handleChange} />
                                     </div>
                                 </div>
                             </div>
@@ -127,8 +174,16 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input3' placeholder='India' />
-                                        <IoIosArrowDown size={18} className='pdetails-icon2' />
+                                        <select
+                                            type="text"
+                                            name="country"
+                                            className='pdetails-input3'
+                                            placeholder='Mumbai'
+                                            onChange={handleChange}
+                                        >
+                                            <option value="value">India</option>
+                                            <option value="value">options</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -138,8 +193,16 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input3' placeholder='Maharashtra' />
-                                        <IoIosArrowDown size={18} className='pdetails-icon2' />
+                                        <select
+                                            type="text"
+                                            name="state"
+                                            className='pdetails-input3'
+                                            placeholder='Mumbai'
+                                            onChange={handleChange}
+                                        >
+                                            <option value="value">Maharashtra</option>
+                                            <option value="value">options</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -149,10 +212,26 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input3' placeholder='Mumbai' />
-                                        <IoIosArrowDown size={18} className='pdetails-icon2' />
+                                        <select
+                                            type="text"
+                                            name="city"
+                                            className='pdetails-input3'
+                                            placeholder='Mumbai'
+                                            onChange={handleChange}
+                                        >
+                                            <option value="value">Mumbai</option>
+                                            <option value="value">options</option>
+                                        </select>
                                     </div>
                                 </div>
+                            </div>
+                            <div className="roleBottom">
+                                <Button variant='round-outline'>
+                                    Cancel
+                                </Button>
+                                <Button variant='round' >
+                                    Save
+                                </Button>
                             </div>
                         </div>
                     </div>
@@ -161,4 +240,3 @@ export default function page() {
         </div>
     )
 }
-

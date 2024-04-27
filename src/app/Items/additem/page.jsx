@@ -9,7 +9,39 @@ import { HiOutlineDocumentArrowUp } from "react-icons/hi2";
 import './page.css'
 import Button from '@/Components/common/Button/Button';
 
-export default function page() {
+export default function Page() {
+    // State to store input field values
+    const [formData, setFormData] = useState({
+        itemType: '',
+        productName: '',
+        sellingPrice: '',
+        unit: '',
+        documents: '',
+        description: ''
+    });
+
+    // Function to handle changes in input fields
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    // Function to handle file change
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setFormData(prevState => ({
+            ...prevState,
+            documents: file.name
+        }));
+    };
+
+    // Logging the formData object
+    useEffect(() => {
+        console.log(formData);
+    }, [formData]);
 
     return (
         <div className='customer-layout'>
@@ -28,13 +60,13 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value">
                                     <div className="pdetails-value-opt">
-                                        <input type="radio" name='customer' />
+                                        <input type="radio" name='itemType' value="Product" onChange={handleChange} />
                                         <div className="label2">
                                             Product
                                         </div>
                                     </div>
                                     <div className="pdetails-value-opt">
-                                        <input type="radio" name='customer' />
+                                        <input type="radio" name='itemType' value="Service" onChange={handleChange} />
                                         <div className="label2">
                                             Service
                                         </div>
@@ -47,7 +79,7 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input2' placeholder='Company Name' />
+                                        <input type="text" name="productName" className='pdetails-input2' placeholder='Product Name' onChange={handleChange} />
                                     </div>
                                 </div>
                             </div>
@@ -57,7 +89,7 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input' placeholder='Ruppees' />
+                                        <input type="text" name="sellingPrice" className='pdetails-input' placeholder='Ruppees' onChange={handleChange} />
                                         <FaIndianRupeeSign size={18} className='pdetails-icon' />
                                     </div>
                                 </div>
@@ -68,8 +100,16 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" className='pdetails-input3' placeholder='abc' />
-                                        <IoIosArrowDown size={18} className='pdetails-icon2' />
+                                        <select
+                                            type="text"
+                                            name="unit"
+                                            className='pdetails-input3'
+                                            placeholder='Mumbai'
+                                            onChange={handleChange}
+                                        >
+                                            <option value="value">Unit</option>
+                                            <option value="value">options</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +120,7 @@ export default function page() {
                                 <div className="pdetails-value2">
                                     <div className="pdetials-doc-input">
                                         <div className="pdetails-value-wrapper2">
-                                            <input type="file" className='pdetails-input4' placeholder='abc@gmail.com' />
+                                            <input type="file" className='pdetails-input4' placeholder='abc@gmail.com' onChange={handleFileChange} />
                                             <HiOutlineDocumentArrowUp size={18} className='pdetails-icon' />
                                         </div>
                                         <div style={{ color: "#010080" }} className="label5">The file size should be lesser than 5 mb</div>
@@ -93,8 +133,7 @@ export default function page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <textarea type="text" className='pdetails-input2' placeholder='Description' />
-                                        
+                                        <textarea type="text" name="description" className='pdetails-input2' placeholder='Description' onChange={handleChange} />
                                     </div>
                                 </div>
                             </div>
@@ -113,4 +152,3 @@ export default function page() {
         </div>
     )
 }
-

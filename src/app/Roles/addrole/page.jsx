@@ -2,17 +2,30 @@
 import Sidebar from '@/Components/shared/Sidebar/sidebar'
 import { React, useState, useEffect } from 'react'
 import Topbar from '@/Components/shared/Topbar/topbar'
-import { MdMailOutline } from "react-icons/md";
-import { FiPhone } from "react-icons/fi";
-import { IoIosArrowDown } from "react-icons/io";
-import { HiOutlineDocumentArrowUp } from "react-icons/hi2";
 import { Checkbox } from '@/Components/common/Checkbox/checkbox';
 import './page.css'
 import './table.css'
 import sidebarNavigators from '@/json/sidebar';
 import Button from '@/Components/common/Button/Button';
 
-export default function page() {
+export default function Page() {
+    // State to store role permissions
+    const [rolePermissions, setRolePermissions] = useState({});
+
+    // Function to handle changes in permission checkboxes
+    const handlePermissionChange = (role, permission, value) => {
+        setRolePermissions(prevState => ({
+            ...prevState,
+            [role]: {
+                ...prevState[role],
+                [permission]: value
+            }
+        }));
+    };
+
+    useEffect(() => {
+        console.log(rolePermissions);
+    }, [rolePermissions]);
 
     return (
         <div className='customer-layout'>
@@ -22,10 +35,9 @@ export default function page() {
                 <div className="main-section">
                     <div className="addcustomer-personaldetails">
                         <div className="personal-details-heading">
-                            <h6>Persoanal Details</h6>
+                            <h6>Role Details</h6>
                         </div>
                         <div className="personaldetails-content">
-
                             <div className="pdetails-fieldvalue">
                                 <div className="label2 pdetails-field">
                                     Role Name*
@@ -47,25 +59,21 @@ export default function page() {
                                     </th>
                                     <th className='th4'>
                                         <div className="th2">
-                                            <Checkbox />
                                             Add
                                         </div>
                                     </th>
                                     <th className='th4'>
                                         <div className="th2">
-                                            <Checkbox />
                                             View
                                         </div>
                                     </th>
                                     <th className='th4'>
                                         <div className="th2">
-                                            <Checkbox />
                                             Edit
                                         </div>
                                     </th>
                                     <th className='th4'>
                                         <div className="th2">
-                                            <Checkbox />
                                             Delete
                                         </div>
                                     </th>
@@ -78,16 +86,28 @@ export default function page() {
                                             {item.name}
                                         </td>
                                         <td className='th1'>
-                                            <Checkbox />
+                                            <Checkbox
+                                                checked={rolePermissions[item.name]?.add || false}
+                                                onChange={(e) => handlePermissionChange(item.name, 'add', e.target.checked)}
+                                            />
                                         </td>
                                         <td className="label2">
-                                            <Checkbox />
+                                            <Checkbox
+                                                checked={rolePermissions[item.name]?.view || false}
+                                                onChange={(e) => handlePermissionChange(item.name, 'view', e.target.checked)}
+                                            />
                                         </td>
                                         <td className="label2">
-                                            <Checkbox />
+                                            <Checkbox
+                                                checked={rolePermissions[item.name]?.edit || false}
+                                                onChange={(e) => handlePermissionChange(item.name, 'edit', e.target.checked)}
+                                            />
                                         </td>
                                         <td className="label2">
-                                            <Checkbox />
+                                            <Checkbox
+                                                checked={rolePermissions[item.name]?.delete || false}
+                                                onChange={(e) => handlePermissionChange(item.name, 'delete', e.target.checked)}
+                                            />
                                         </td>
                                     </tr>
                                 ))}
@@ -97,15 +117,13 @@ export default function page() {
                             <Button variant='round-outline'>
                                 Cancel
                             </Button>
-                            <Button variant='round' >
+                            <Button variant='round' onClick={()=>console.log(rolePermissions)}>
                                 Save
                             </Button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     )
 }
-

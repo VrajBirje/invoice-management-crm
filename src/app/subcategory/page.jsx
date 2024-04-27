@@ -83,9 +83,9 @@ export default function page() {
     };
     return (
         <div className='customer-layout'>
-            <Sidebar active="Items" settingsBool={false} masterBool={false}/>
+            <Sidebar active="Sub-Category" settingsBool={false} masterBool={true}/>
             <div className="mainpage-container">
-                <Topbar name="Add Item" />
+                <Topbar name="Sub-Category" />
                 <div className="main-section">
                     <div className="main-section-top">
                         <div className="main-section-search">

@@ -96,7 +96,7 @@ export default function page() {
                             <Button variant='round-outline' suffixIcon={<IoMdArrowDropdown size={20} />}>
                                 Newest
                             </Button>
-                            <Button variant='round' prefixIcon={<RiAddFill size={20} />}>
+                            <Button link="/Roles/addrole" variant='round' prefixIcon={<RiAddFill size={20} />}>
                                 New Role
                             </Button>
                         </div>

@@ -125,16 +125,16 @@ input[text]:focus {
     padding: 7px 28px 7px 10px;
     width: 85%;
 }
-.pdetails-input3 {
-    padding: 7px 28px 7px 10px;
-    width: 100%;
-}
 
 .pdetails-input3 {
     padding: 7px 28px 7px 10px;
     width: 100%;
 }
 
+.pdetails-input3 {
+    padding: 7px 28px 7px 10px;
+    width: 100%;
+}
 .pdetails-input4 {
     padding: 7px 10px 7px 28px;
     width: 85%;
@@ -201,3 +201,33 @@ input[text]:focus {
     justify-content: flex-end;
     gap: 10px;
 }
+
+
+.pdetails-dates{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 100px;
+}
+
+#quote-table{
+    width: 100%;
+}
+
+#quote-table th{
+    font-size: 14px;
+    color: var(--color-primary);
+    border-bottom: 1px solid var(--color-grey);
+}
+
+.pdetails-input5 {
+    padding: 7px 10px 7px 10px;
+    width: 90%;
+}
+.pdetails-input6 {
+    padding: 7px 10px 7px 10px;
+    width: 94%;
+}
+
+
