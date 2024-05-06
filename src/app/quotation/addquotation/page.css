@@ -254,3 +254,35 @@ input[text]:focus {
     padding: 7px 10px 7px 10px;
     width: 94%;
 }
+
+.finalQuote{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #c2bbeb4f;
+    border-radius: 20px;
+    width: 300px;
+    gap: 15px;
+}
+
+.finalQuote-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.subtotal{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.subtotal-input{
+    width: 50px;
+    text-align: right;
+    background-color: transparent;
+}

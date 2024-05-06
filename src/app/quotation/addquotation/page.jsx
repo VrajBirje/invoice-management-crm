@@ -13,6 +13,9 @@ import items from '@/json/items';
 export default function page() {
     const [tableRows, setTableRows] = useState([{ id: 1, item: items[0], quantity: 1, discount: 0, discountType: 'per', amount: items[0].price }]);
     const [totalAmount, setTotalAmount] = useState(tableRows[0].amount);
+    const [adjustment, setAdjustment] = useState(0);
+    const [tax, setTax] = useState(18);
+    const [finalAmount, setfinalAmount] = useState(totalAmount + adjustment + (((totalAmount + adjustment) * tax) / 100));
 
     const addRow = () => {
         const newRow = { id: tableRows.length + 1, item: items[0], quantity: 1, discount: 0, discountType: 'per', amount: items[0].price };
@@ -61,9 +64,15 @@ export default function page() {
         return 0;
     };
 
+    useEffect(() => {
+        // Recalculate final amount whenever totalAmount, adjustment, or tax changes
+        setfinalAmount(totalAmount + parseFloat(adjustment) + ((totalAmount + parseFloat(adjustment)) * parseFloat(tax)) / 100);
+    }, [totalAmount, adjustment, tax]);
+
     const updateTotalAmount = (rows) => {
         const total = rows.reduce((acc, curr) => acc + curr.amount, 0);
         setTotalAmount(total);
+        // setfinalAmount(totalAmount + adjustment + (((totalAmount + adjustment) * tax) / 100));
     };
     return (
         <div className='customer-layout'>
@@ -77,7 +86,7 @@ export default function page() {
                         </div>
                         <div className="personaldetails-content">
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field" style={{color:"red"}}>
+                                <div className="label2 pdetails-field" style={{ color: "red" }}>
                                     Customer Name*
                                 </div>
                                 <div className="pdetails-value2">
@@ -107,7 +116,7 @@ export default function page() {
                             </div>
                             <div className="pdetails-dates">
                                 <div className="pdetails-fieldvalue">
-                                    <div className="label2 pdetails-field" style={{color:"red"}}>
+                                    <div className="label2 pdetails-field" style={{ color: "red" }}>
                                         Quote Date*
                                     </div>
                                     <div className="pdetails-value2">
@@ -128,7 +137,7 @@ export default function page() {
                                 </div>
                             </div>
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field" style={{color:"red"}}>
+                                <div className="label2 pdetails-field" style={{ color: "red" }}>
                                     Sales Person*
                                 </div>
                                 <div className="pdetails-value2">
@@ -147,26 +156,12 @@ export default function page() {
                                 </div>
                             </div>
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field" style={{color:"red"}}>
+                                <div className="label2 pdetails-field" style={{ color: "red" }}>
                                     Subject
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
                                         <input type="text" className='pdetails-input2' placeholder='Subject' />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field">
-                                    Documents
-                                </div>
-                                <div className="pdetails-value2">
-                                    <div className="pdetials-doc-input">
-                                        <div className="pdetails-value-wrapper2">
-                                            <input type="file" className='pdetails-input4' placeholder='abc@gmail.com' />
-                                            <HiOutlineDocumentArrowUp size={18} className='pdetails-icon' />
-                                        </div>
-                                        <div style={{ color: "#010080" }} className="label5">The file size should be lesser than 5 mb</div>
                                     </div>
                                 </div>
                             </div>
@@ -232,36 +227,36 @@ export default function page() {
                                         <tr key={row.id}>
                                             {/* Select dropdown for item */}
                                             <td>
-                                                <select id='item'  value={row.item.name} onChange={(e) => handleItemChange(index, e)} className='pdetails-input6' 
-                                                style={{
-                                                    width:"100%",
-                                                    WebkitAppearance:"none",
-                                                    MozAppearance:"none",
-                                                    border:"none"
-                                                }}>
+                                                <select id='item' value={row.item.name} onChange={(e) => handleItemChange(index, e)} className='pdetails-input6'
+                                                    style={{
+                                                        width: "100%",
+                                                        WebkitAppearance: "none",
+                                                        MozAppearance: "none",
+                                                        border: "none"
+                                                    }}>
                                                     {items.map((item, i) => (
                                                         <option key={i} value={item.name}>{item.name}</option>
                                                     ))}
                                                 </select>
                                             </td>
                                             {/* Input for quantity */}
-                                            <td 
-                                            style={{
-                                                    width:"17%",
+                                            <td
+                                                style={{
+                                                    width: "17%",
                                                 }}
                                             >
-                                                <input type="number" value={row.quantity} onChange={(e) => handleQuantityChange(index, e)} className='pdetails-input5' style={{textAlign:"right"}}/>
+                                                <input type="number" value={row.quantity} onChange={(e) => handleQuantityChange(index, e)} className='pdetails-input5' style={{ textAlign: "right" }} />
                                             </td>
-                                            <td 
-                                             style={{
-                                                    width:"17%",
-                                                    textAlign:"right",
-                                                    padding:"7px"
+                                            <td
+                                                style={{
+                                                    width: "17%",
+                                                    textAlign: "right",
+                                                    padding: "7px"
                                                 }}
                                             >{row.item.price}</td>
                                             {/* Input and select for discount */}
-                                            <td style={{ display: 'flex', alignItems: 'center'}}>
-                                                <input type="number" value={row.discount} onChange={(e) => handleDiscountChange(index, e)} className='pdetails-input5' style={{width:"100%",textAlign:"right"}}/>
+                                            <td style={{ display: 'flex', alignItems: 'center' }}>
+                                                <input type="number" value={row.discount} onChange={(e) => handleDiscountChange(index, e)} className='pdetails-input5' style={{ width: "100%", textAlign: "right" }} />
                                                 <select value={row.discountType} onChange={(e) => handleDiscountTypeChange(index, e)} style={{ marginLeft: '5px' }}>
                                                     <option value="per">%</option>
                                                     <option value="num">₹</option>
@@ -269,12 +264,12 @@ export default function page() {
                                             </td>
                                             {/* Display calculated amount */}
                                             <td
-                                             style={{
-                                                    width:"17%",
-                                                    textAlign:"right",
-                                                    padding:"7px"
+                                                style={{
+                                                    width: "17%",
+                                                    textAlign: "right",
+                                                    padding: "7px"
                                                 }}
-                                            >{row.amount}</td>
+                                            >{row.amount}/-</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -287,8 +282,55 @@ export default function page() {
 
                                 </div>
                             </div>
+                            <div className="finalQuote-container">
+                                <div className="personaldetails-content">
+                                    <div className="pdetails-fieldvalue">
+                                        <div className="label2 pdetails-field">
+                                            Documents
+                                        </div>
+                                        <div className="pdetails-value2">
+                                            <div className="pdetials-doc-input">
+                                                <div className="pdetails-value-wrapper2">
+                                                    <input type="file" className='pdetails-input4' placeholder='abc@gmail.com' />
+                                                    <HiOutlineDocumentArrowUp size={18} className='pdetails-icon' />
+                                                </div>
+                                                <div style={{ color: "#010080" }} className="label5">The file size should be lesser than 5 mb</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="pdetails-fieldvalue">
+                                        <div className="label2 pdetails-field">
+                                            Terms and Conditions
+                                        </div>
+                                        <div className="pdetails-value2">
+                                            <div className="pdetails-value-wrapper2">
+                                                <textarea type="text" className='pdetails-input2' placeholder='Terms and Conditions' />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="finalQuote">
+                                    <div className='subtotal'>
+                                        <div className="label2" style={{ fontWeight: "500" }}>Sub-Total:</div>
+                                        <div className="label2" style={{ fontWeight: "500" }}>{totalAmount}/-</div>
+                                    </div>
+                                    <div className="subtotal">
+                                        <div className="label2" style={{ fontWeight: "500" }}>Adjustment:</div>
+                                        <div className="label2" style={{ fontWeight: "500" }}><input className='subtotal-input' type="number" value={adjustment} onChange={(e) => setAdjustment(e.target.value === '' ? 0 : e.target.value)} /></div>
+                                    </div>
+                                    <div className="subtotal">
+                                        <div className="label2" style={{ fontWeight: "500" }}>Tax:</div>
+                                        <div className="label2" style={{ fontWeight: "500" }}>{tax}</div>
+                                    </div>
+                                    <hr style={{ width: "100%" }} />
+                                    <div className="subtotal">
+                                        <div className="label3" style={{ fontWeight: "500", fontSize: "14px" }}>Total Amount(₹)</div>
+                                        <div className="label3" style={{ fontWeight: "500", fontSize: "14px" }}>{finalAmount}/-</div>
+                                    </div>
+                                </div>
+                            </div>
                             <div className="roleBottom">
-                                <div>Total Amount: {totalAmount}</div>
                                 <Button variant='round-outline'>
                                     Cancel
                                 </Button>
