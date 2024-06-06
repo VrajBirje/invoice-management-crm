@@ -17,7 +17,7 @@ import { FiPhone } from "react-icons/fi";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoMdArrowDropleft } from "react-icons/io";
 
-export default function page() {
+export default function Page() {
     const [searchTerm, setSearchTerm] = useState('');
     const [itemsPerPage, setItemsPerPage] = useState(10); // State for items per page
     const [data, setData] = useState([]);

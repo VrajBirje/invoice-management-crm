@@ -4,34 +4,31 @@ import { useState } from 'react';
 import Topbar from '@/Components/shared/Topbar/topbar';
 import { MdMailOutline } from "react-icons/md";
 import { FiPhone } from "react-icons/fi";
-import { IoIosArrowDown } from "react-icons/io";
 import { HiOutlineDocumentArrowUp } from "react-icons/hi2";
 import './page.css';
 import Button from '@/Components/common/Button/Button';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Page() {
     const [formData, setFormData] = useState({
-        customerType: '',
+        type: '',
         firstName: '',
         lastName: '',
         companyName: '',
-        email: '',
-        phone: '',
+        emailId: '',
+        phoneNo: '',
         gstNo: '',
-        paymentTerms: '',
+        paymentTerms: 1,
         documents: null,
-        billingAddress: {
-            companyName: '',
-            country: '',
-            state: '',
-            city: ''
-        },
-        shippingAddress: {
-            companyName: '',
-            country: '',
-            state: '',
-            city: ''
-        }
+        b_address: "",
+        b_country: 1,
+        b_state: 1,
+        b_city: 1,
+        s_address: "",
+        s_country: 1,
+        s_state: 1,
+        s_city: 1
     });
 
     const [errors, setErrors] = useState({});
@@ -57,7 +54,63 @@ export default function Page() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleBlurEmail = async () => {
+        console.log(formData.emailId)
+        try {
+            const response = await fetch('http://localhost:5000/customer/check-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ emailId: formData.emailId }),
+            });
+            const result = await response.json();
+            console.log(result.exists)
+            if (result.exists) {
+                setErrors(prevErrors => ({
+                    ...prevErrors,
+                    email: 'Email already exists'
+                }));
+            }
+            else if (!result.exists) {
+                setErrors(prevErrors => ({
+                    ...prevErrors,
+                    email: null
+                }));
+            }
+        } catch (error) {
+            console.error('Error checking email:', error);
+        }
+    };
+
+    const handleBlurPhone = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/customer/check-phone', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ phoneNo: formData.phoneNo }),
+            });
+            const result = await response.json();
+            if (result.exists) {
+                setErrors(prevErrors => ({
+                    ...prevErrors,
+                    phone: 'Phone number already exists'
+                }));
+            }
+            else if (!result.exists) {
+                setErrors(prevErrors => ({
+                    ...prevErrors,
+                    phone: null
+                }));
+            }
+        } catch (error) {
+            console.error('Error checking phone:', error);
+        }
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Validation rules
@@ -68,18 +121,21 @@ export default function Page() {
         if (!formData.lastName.trim()) {
             errors.lastName = 'Last Name is required';
         }
-        if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+        if (!/^\S+@\S+\.\S+$/.test(formData.emailId)) {
             errors.email = 'Invalid email address';
         }
-        if (!/^\d{10}$/.test(formData.phone)) {
+        if (!/^\d{10}$/.test(formData.phoneNo)) {
             errors.phone = 'Invalid phone number';
         }
-        if (!/^\d{15}$/.test(formData.gstNo)) {
-            errors.gstNo = 'Invalid GST number';
-        }
-        if (!/^[a-zA-Z0-9\s]+$/.test(formData.companyName)) {
+        // if (!/^\d{15}$/.test(formData.gstNo)) {
+        //     errors.gstNo = 'Invalid GST number';
+        // }
+        if (!formData.companyName.trim()) {
+            errors.companyName = 'Company name is required';
+        } else if (!/^[a-zA-Z0-9\s]+$/.test(formData.companyName)) {
             errors.companyName = 'Company Name should not contain special characters';
         }
+
         // Show errors and prevent submission if there are errors
         if (Object.keys(errors).length > 0) {
             setErrors(errors);
@@ -87,13 +143,26 @@ export default function Page() {
         }
 
         // If no errors, proceed with form submission
-        console.log("Form submitted successfully:", formData);
+        try {
+            const response = await fetch('http://localhost:5000/customer/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            const result = await response.json();
+            console.log("Form submitted successfully:", result);
+            toast.success("Customer Added successfully")
+            window.location.href = '/customer'
+        } catch (error) {
+            console.error('Error submitting form:', error);
+        }
     };
-
-    console.log(formData);
 
     return (
         <div className='customer-layout'>
+        <ToastContainer/>
             <Sidebar active="Customer" settingsBool={false} masterBool={false} />
             <div className="mainpage-container">
                 <Topbar name="Add Customer" />
@@ -104,15 +173,15 @@ export default function Page() {
                         </div>
                         <div className="personaldetails-content">
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field" style={{color:"red"}}>
+                                <div className="label2 pdetails-field" style={{ color: "red" }}>
                                     Customer Type*
                                 </div>
                                 <div className="pdetails-value">
                                     <div className="pdetails-value-opt">
                                         <input
                                             type="radio"
-                                            name='customerType'
-                                            value="Individual"
+                                            name='type'
+                                            value= "1" 
                                             onChange={handleChange}
                                         />
                                         <div className="label2">
@@ -122,8 +191,8 @@ export default function Page() {
                                     <div className="pdetails-value-opt">
                                         <input
                                             type="radio"
-                                            name='customerType'
-                                            value="Business"
+                                            name='type'
+                                            value="2"
                                             onChange={handleChange}
                                         />
                                         <div className="label2">
@@ -133,7 +202,7 @@ export default function Page() {
                                 </div>
                             </div>
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field" style={{color:"red"}}>
+                                <div className="label2 pdetails-field" style={{ color: "red" }}>
                                     First Name*
                                 </div>
                                 <div className="pdetails-value">
@@ -148,7 +217,7 @@ export default function Page() {
                                 </div>
                             </div>
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field" style={{color:"red"}}>
+                                <div className="label2 pdetails-field" style={{ color: "red" }}>
                                     Last Name*
                                 </div>
                                 <div className="pdetails-value">
@@ -174,17 +243,18 @@ export default function Page() {
                                 </div>
                             </div>
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field" style={{color:"red"}}>
+                                <div className="label2 pdetails-field" style={{ color: "red" }}>
                                     Email*
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
                                         <input
                                             type="text"
-                                            name="email"
+                                            name="emailId"
                                             className='pdetails-input'
                                             placeholder='abc@gmail.com'
                                             onChange={handleChange}
+                                            onBlur={handleBlurEmail}
                                         />
                                         <MdMailOutline size={18} className='pdetails-icon' />
                                         {errors.email && <div className="error-message">{errors.email}</div>}
@@ -192,17 +262,18 @@ export default function Page() {
                                 </div>
                             </div>
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field" style={{color:"red"}}>
+                                <div className="label2 pdetails-field" style={{ color: "red" }}>
                                     Phone*
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
                                         <input
                                             type="text"
-                                            name="phone"
+                                            name="phoneNo"
                                             className='pdetails-input'
                                             placeholder='Mobile'
                                             onChange={handleChange}
+                                            onBlur={handleBlurPhone}
                                         />
                                         {errors.phone && <div className="error-message">{errors.phone}</div>}
                                         <FiPhone size={18} className='pdetails-icon' />
@@ -210,7 +281,7 @@ export default function Page() {
                                 </div>
                             </div>
                             <div className="pdetails-fieldvalue">
-                                <div className="label2 pdetails-field" style={{color:"red"}}>
+                                <div className="label2 pdetails-field" style={{ color: "red" }}>
                                     GST no.*
                                 </div>
                                 <div className="pdetails-value2">
@@ -262,7 +333,7 @@ export default function Page() {
                     </div>
                     <div className="addcustomer-personaldetails">
                         <div className="personal-details-heading">
-                            <h6>Personal Details</h6>
+                            <h6>Address Details</h6>
                         </div>
                         <div className="personaldetails-content">
                             <div className="personaldetails-content2">
@@ -274,7 +345,7 @@ export default function Page() {
                                         </div>
                                         <div className="pdetails-value2">
                                             <div className="pdetails-value-wrapper2">
-                                                <textarea type="text" className='pdetails-input2' placeholder='Address' />
+                                                <textarea type="text" className='pdetails-input2' placeholder='Address' name="b_address" onChange={handleChange} />
                                             </div>
                                         </div>
                                     </div>
@@ -286,13 +357,13 @@ export default function Page() {
                                             <div className="pdetails-value-wrapper2">
                                                 <select
                                                     type="text"
-                                                    name="country"
+                                                    name="b_country"
                                                     className='pdetails-input3'
-                                                    placeholder='Mumbai'
+                                                    placeholder='Country'
                                                     onChange={handleChange}
                                                 >
-                                                    <option value="value">India</option>
-                                                    <option value="value">options</option>
+                                                    <option value="1">India</option>
+                                                    <option value="2">USA</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -306,13 +377,13 @@ export default function Page() {
                                                 <div className="pdetails-value-wrapper2">
                                                     <select
                                                         type="text"
-                                                        name="state"
+                                                        name="b_state"
                                                         className='pdetails-input3'
-                                                        placeholder='Mumbai'
+                                                        placeholder='State'
                                                         onChange={handleChange}
                                                     >
-                                                        <option value="value">Maharashtra</option>
-                                                        <option value="value">options</option>
+                                                        <option value="1">Maharashtra</option>
+                                                        <option value="2">California</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -326,13 +397,13 @@ export default function Page() {
                                             <div className="pdetails-value-wrapper2">
                                                 <select
                                                     type="text"
-                                                    name="city"
+                                                    name="b_city"
                                                     className='pdetails-input3'
-                                                    placeholder='Mumbai'
+                                                    placeholder='City'
                                                     onChange={handleChange}
                                                 >
-                                                    <option value="value">Mumbai</option>
-                                                    <option value="value">options</option>
+                                                    <option value="1">Mumbai</option>
+                                                    <option value="2">Los Angeles</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -343,7 +414,7 @@ export default function Page() {
                                         </div>
                                         <div className="pdetails-value2">
                                             <div className="pdetails-value-wrapper2">
-                                                <input type="Number" name="Pincode" className='pdetails-input2' placeholder='Pincode' onChange={handleChange} />
+                                                <input type="Number" name="b_pincode" className='pdetails-input2' placeholder='Pincode' onChange={handleChange} />
                                             </div>
                                         </div>
                                     </div>
@@ -356,7 +427,7 @@ export default function Page() {
                                         </div>
                                         <div className="pdetails-value2">
                                             <div className="pdetails-value-wrapper2">
-                                                <textarea type="text" className='pdetails-input2' placeholder='Address' />
+                                                <textarea type="text" className='pdetails-input2' placeholder='Address' name="s_address" onChange={handleChange} />
                                             </div>
                                         </div>
                                     </div>
@@ -368,13 +439,13 @@ export default function Page() {
                                             <div className="pdetails-value-wrapper2">
                                                 <select
                                                     type="text"
-                                                    name="country"
+                                                    name="s_country"
                                                     className='pdetails-input3'
-                                                    placeholder='Mumbai'
+                                                    placeholder='Country'
                                                     onChange={handleChange}
                                                 >
-                                                    <option value="value">India</option>
-                                                    <option value="value">options</option>
+                                                    <option value="1">India</option>
+                                                    <option value="2">USA</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -387,13 +458,13 @@ export default function Page() {
                                             <div className="pdetails-value-wrapper2">
                                                 <select
                                                     type="text"
-                                                    name="state"
+                                                    name="s_state"
                                                     className='pdetails-input3'
-                                                    placeholder='Mumbai'
+                                                    placeholder='State'
                                                     onChange={handleChange}
                                                 >
-                                                    <option value="value">Maharashtra</option>
-                                                    <option value="value">options</option>
+                                                    <option value="1">Maharashtra</option>
+                                                    <option value="2">California</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -406,13 +477,13 @@ export default function Page() {
                                             <div className="pdetails-value-wrapper2">
                                                 <select
                                                     type="text"
-                                                    name="city"
+                                                    name="s_city"
                                                     className='pdetails-input3'
-                                                    placeholder='Mumbai'
+                                                    placeholder='City'
                                                     onChange={handleChange}
                                                 >
-                                                    <option value="value">Mumbai</option>
-                                                    <option value="value">options</option>
+                                                    <option value="1">Mumbai</option>
+                                                    <option value="2">Los Angeles</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -423,7 +494,7 @@ export default function Page() {
                                         </div>
                                         <div className="pdetails-value2">
                                             <div className="pdetails-value-wrapper2">
-                                                <input type="Number" name="Pincode" className='pdetails-input2' placeholder='Pincode' onChange={handleChange} />
+                                                <input type="Number" name="s_pincode" className='pdetails-input2' placeholder='Pincode' onChange={handleChange} />
                                             </div>
                                         </div>
                                     </div>

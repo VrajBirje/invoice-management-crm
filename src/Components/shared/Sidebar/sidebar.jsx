@@ -7,6 +7,7 @@ import SidebarNavigator from '../sidebarNavigator/sidebarNavigator'
 import { BsClipboardData } from "react-icons/bs";
 import { LuSettings } from "react-icons/lu";
 import { IoIosArrowDown } from "react-icons/io";
+import Cookies from 'js-cookie';
 
 export default function Sidebar({ active , settingsBool , masterBool }) {
     const [master, setMaster] = useState(masterBool)
@@ -22,13 +23,13 @@ export default function Sidebar({ active , settingsBool , masterBool }) {
     return (
         <div className='sidebarContainer'>
             <div className="sidebar-logoContainer">
-                <Image src="/hoarwaylogo.png" width={150} height={35} />
+                <Image src="/hoarwaylogo.png" width={150} height={35} alt='img'/>
             </div>
             <div className="sidebar-navigators">
                 {sidebarNavigators
                     .filter(sidebar => sidebar.type == "Main")
                     .map((sidebar, key) => (
-                        <SidebarNavigator name={sidebar.name} active={active == sidebar.name} />
+                        <SidebarNavigator key={key} name={sidebar.name} active={active == sidebar.name} />
                     ))}
             </div>
             <div className="sidebar-navigators master-navigators">
@@ -47,7 +48,7 @@ export default function Sidebar({ active , settingsBool , masterBool }) {
                     {sidebarNavigators
                         .filter(sidebar => sidebar.type == "Master")
                         .map((sidebar, key) => (
-                            <SidebarNavigator name={sidebar.name} active={active == sidebar.name} />
+                            <SidebarNavigator key={key} name={sidebar.name} active={active == sidebar.name} />
                         ))}
                 </div>
             </div>
@@ -67,7 +68,7 @@ export default function Sidebar({ active , settingsBool , masterBool }) {
                     {sidebarNavigators
                         .filter(sidebar => sidebar.type == "Settings")
                         .map((sidebar, key) => (
-                            <SidebarNavigator name={sidebar.name} active={active == sidebar.name} />
+                            <SidebarNavigator key={key} name={sidebar.name} active={active == sidebar.name} />
                         ))}
                 </div>
             </div>
@@ -75,14 +76,14 @@ export default function Sidebar({ active , settingsBool , masterBool }) {
                 {sidebarNavigators
                     .filter(sidebar => sidebar.type == "Bottom")
                     .map((sidebar, key) => (
-                        <SidebarNavigator name={sidebar.name} active={active == sidebar.name} />
+                        <SidebarNavigator key={key} name={sidebar.name} active={active == sidebar.name} />
                     ))}
             </div>
-            <div className="sidebar-navigators">
+            <div className="sidebar-navigators" onClick={()=>{Cookies.remove("token")}}>
                 {sidebarNavigators
                     .filter(sidebar => sidebar.name == "Log Out")
                     .map((sidebar, key) => (
-                        <SidebarNavigator name={sidebar.name} active={active == sidebar.name} />
+                        <SidebarNavigator key={key} name={sidebar.name} active={active == sidebar.name} />
                     ))}
             </div>
 

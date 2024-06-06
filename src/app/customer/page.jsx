@@ -1,27 +1,28 @@
 "use client";
-import Sidebar from '@/Components/shared/Sidebar/sidebar'
-import { React, useState, useEffect } from 'react'
-import { IoMdArrowDropdown } from "react-icons/io";
-import './page.css'
-import './table.css'
+import Sidebar from '@/Components/shared/Sidebar/sidebar';
+import { React, useState, useEffect } from 'react';
+import { IoMdArrowDropdown, IoMdArrowDropright, IoMdArrowDropleft } from "react-icons/io";
 import { RiAddFill } from "react-icons/ri";
-import Topbar from '@/Components/shared/Topbar/topbar'
-import Button from '@/Components/common/Button/Button'
+import { MdDeleteOutline } from "react-icons/md";
+import { LuClipboardEdit, LuMail } from "react-icons/lu";
+import { FiPhone } from "react-icons/fi";
+import Link from 'next/link';
+import './page.css';
+import './table.css';
+import Topbar from '@/Components/shared/Topbar/topbar';
+import Button from '@/Components/common/Button/Button';
 import { Search } from '@/Components/common/Search/search';
 import { Checkbox } from '@/Components/common/Checkbox/checkbox';
 import dataMain from '@/json/data';
-import { MdDeleteOutline } from "react-icons/md";
-import { LuClipboardEdit } from "react-icons/lu";
-import { LuMail } from "react-icons/lu";
-import { FiPhone } from "react-icons/fi";
-import { IoMdArrowDropright } from "react-icons/io";
-import { IoMdArrowDropleft } from "react-icons/io";
+import Modal from '@/Components/common/Modal/Modal'; // Ensure you have this component
 
-export default function page() {
+export default function Page() {
     const [searchTerm, setSearchTerm] = useState('');
-    const [itemsPerPage, setItemsPerPage] = useState(10); // State for items per page
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [showDeleteSubCategoryModal, setShowDeleteSubCategoryModal] = useState(false);
+    const [subCategoryToDelete, setSubCategoryToDelete] = useState(null); // State to keep track of the item to be deleted
     const date = new Date();
     const activeDate = date.toLocaleDateString();
     const itemsPerPageOptions = [10, 15, 20, 25];
@@ -32,12 +33,28 @@ export default function page() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('https://dev-d478mkay4qiodj5.api.raw-labs.com/api/json');
+            const response = await fetch('http://localhost:5000/customer/all');
             const jsonData = await response.json();
-            // setData(jsonData);
-            setData(dataMain);
+            setData(jsonData);
+            // setData(dataMain);
         } catch (error) {
             console.error('Error fetching data:', error);
+        }
+    };
+
+    const handleDeleteSubCategory = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/customer/delete/${subCategoryToDelete}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                setData(data.filter(item => item.Id !== subCategoryToDelete));
+                setShowDeleteSubCategoryModal(false);
+            } else {
+                console.error('Failed to delete the sub-category');
+            }
+        } catch (error) {
+            console.error('Error deleting sub-category:', error);
         }
     };
 
@@ -52,7 +69,6 @@ export default function page() {
         })
         // : data.filter(item => activeDate === '' || item.date === activeDate);
         : data;
-
 
     // Calculate total number of pages
     const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -81,6 +97,12 @@ export default function page() {
     const handleNavigate = (item, event) => {
         event.preventDefault();
     };
+
+    const openDeleteModal = (itemId) => {
+        setSubCategoryToDelete(itemId);
+        setShowDeleteSubCategoryModal(true);
+    };
+
     return (
         <div className='customer-layout'>
             <Sidebar active="Customer" settingsBool={false} masterBool={false} />
@@ -89,7 +111,7 @@ export default function page() {
                 <div className="main-section">
                     <div className="main-section-top">
                         <div className="main-section-search">
-                            <Search />
+                            <Search onChange={handleSearch} />
                         </div>
                         <div className="main-section-top-buttons">
                             <Button variant='round-outline' suffixIcon={<IoMdArrowDropdown size={20} />}>
@@ -109,9 +131,6 @@ export default function page() {
                                     </th>
                                     <th>
                                         Customer Name
-                                    </th>
-                                    <th>
-                                        Id
                                     </th>
                                     <th>
                                         Type
@@ -137,9 +156,8 @@ export default function page() {
                                             <Checkbox />
                                         </td>
                                         <td className='tableName'>
-                                            {item.name}
+                                            {item.firstName} {item.lastName}
                                         </td>
-                                        <td className='tableId'>#{item.phoneNumber}</td>
                                         <td className='label2'>Individual</td>
                                         <td className='label2'>Hoarway</td>
                                         <td className='label2'>Active</td>
@@ -155,8 +173,8 @@ export default function page() {
                                         </td>
                                         <td className='actionsTable'>
                                             <div className="table-contacts">
-                                                <MdDeleteOutline size={22} />
-                                                <LuClipboardEdit size={22} />
+                                                <MdDeleteOutline size={22} onClick={() => openDeleteModal(item.Id)} />
+                                                <Link href={{ pathname: '/customer/editcustomer', query: { id: item.Id } }}><LuClipboardEdit size={22} /></Link>
                                             </div>
                                         </td>
                                     </tr>
@@ -187,7 +205,23 @@ export default function page() {
                     </div>
                 </div>
             </div>
-        </div>
-    )
-}
 
+            {showDeleteSubCategoryModal && (
+                <Modal>
+                    <div className="modal-content">
+                        <div style={{ marginBottom: "10px" }}>
+                            <h5>Delete Customer</h5>
+                        </div>
+                        <div className="modal-body" style={{ marginBottom: "20px" }}>
+                            Are you sure you want to delete this customer?
+                        </div>
+                        <div className="modal-actions">
+                            <Button onClick={() => setShowDeleteSubCategoryModal(false)}>Cancel</Button>
+                            <Button variant="round-outline" onClick={handleDeleteSubCategory}>Delete</Button>
+                        </div>
+                    </div>
+                </Modal>
+            )}
+        </div>
+    );
+}

@@ -1,0 +1,39 @@
+/* @import "../../../Styles/global.css"; */
+
+.loader-div {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999999;
+}
+
+.page-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 50%;
+  bottom: 50%;
+  position: absolute;
+  left: 33%;
+}
+
+.loader-text {
+  color: var(--color-white);
+  display: flex;
+  justify-content: center;
+  left: 48%;
+  position: absolute;
+  top: 42%;
+  font-size: 18px;
+}
+
+@media screen and (max-width: 768px) {
+  .page-loader {
+    left: 45% !important;
+  }
+
+  .loader-text {
+    right: 50%;
+  }
+}

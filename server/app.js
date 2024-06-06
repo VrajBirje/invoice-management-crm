@@ -1,118 +1,57 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const mysql = require('mysql')
-const { TbHorse } = require('react-icons/tb')
+const express = require('express');
+const bodyParser = require('body-parser');
+const mysql = require('mysql');
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const roleRoutes = require('./routes/roleRoutes')
+const activityRoutes = require('./routes/activityRoutes');
+const categoryRoutes = require('./routes/categoryRoutes')
+const subCategoryRoutes = require('./routes/subCategoryRoutes');
+const itemRoutes = require('./routes/itemRoutes');
+const customerRoutes = require('./routes/customerRoutes');
+const redis = require('redis');
+const cors = require('cors')
 
-const app = express()
-const port = process.env.port || 5000
+const app = express();
+const port = process.env.PORT || 5000;
 
-app.use(bodyParser.urlencoded({ extended: false }))
+// Create a Redis client
+const redisClient = redis.createClient();
 
-app.use(bodyParser.json())
+redisClient.on('error', (err) => {
+  console.error('Redis error:', err);
+});
 
-//my sql
+app.use(cors(
+  // {origin:"http://localhost:3000/"}
+));
+
+// MySQL connection pool
 const pool = mysql.createPool({
-    connectionLimit: 10,
-    host: 'localhost',
-    user: 'root',
-    password: '#Barcelona2015',
-    database: 'vraj_invoice'
-})
+  connectionLimit: 10,
+  host: 'localhost',
+  user: 'root',
+  password: '#Barcelona2015',
+  database: 'hoarwaycrm'
+});
 
-app.get('/users', (req, res) => {
-    pool.getConnection((err, connection) => {
-        if (err) throw err
-        console.log(`connect as id ${connection.threadId}`)
-        connection.query('SELECT * from users', (err, rows) => {
-            connection.release()
-            if (!err) {
-                res.send(rows)
-            }
-            else {
-                console.log(err)
-            }
-        })
-    })
-})
+// Middleware to parse JSON bodies
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.get('/users/:id', (req, res) => {
-    pool.getConnection((err, connection) => {
-        if (err) throw err
-        console.log(`connect as id ${connection.threadId}`)
-        connection.query('SELECT * from users WHERE id = ?',[req.params.id], (err, rows) => {
-            connection.release()
-            if (!err) {
-                res.send(rows)
-            }
-            else {
-                console.log(err)
-            }
-        })
-    })
-})
+// Make the pool available to the application
+app.set('pool', pool);
 
-app.delete('/users/:id', (req, res) => {
-    pool.getConnection((err, connection) => {
-        if (err) throw err
-        console.log(`connect as id ${connection.threadId}`)
-        connection.query('DELETE from users WHERE id = ?',[req.params.id], (err, rows) => {
-            connection.release()
-            if (!err) {
-                res.send(`user with the record id ${req.params.id} is deleted`)
-            }
-            else {
-                console.log(err)
-            }
-        })
-    })
-})
+// Routes
+app.use('/auth', authRoutes);
+app.use('/activity', activityRoutes);
+app.use('/users', userRoutes);
+app.use('/roles', roleRoutes)
+app.use('/category', categoryRoutes)
+app.use('/subcategory', subCategoryRoutes);
+app.use('/item', itemRoutes);
+app.use('/customer', customerRoutes);
 
+// Listen on env port or 5000
+app.listen(port, () => console.log(`Server running at http://localhost:${port}/`));
 
-app.post('/users', (req, res) => {
-    pool.getConnection((err, connection) => {
-        if (err) throw err
-        console.log(`connect as id ${connection.threadId}`)
-        const params = req.body;
-        const {name, role, phone , email} = req.body;
-        console.log(name, role , phone , email)
-        var sql = `INSERT INTO users (name,role,phone,email) VALUES ('${name}','${role}','${phone}','${email}')`;
-        connection.query('INSERT INTO users SET ?',params,(err, result) => {
-            connection.release()
-            if (!err) {
-                res.send(`user with the record id ${result.insertId} has been added`)
-            }
-            else {
-                console.log(err)
-            }
-        })
-    })
-})
-
-
-
-app.put('/users/', (req, res) => {
-    pool.getConnection((err, connection) => {
-        if (err) throw err
-        console.log(`connect as id ${connection.threadId}`)
-        // const params = req.body;
-        const {id , name, role, phone , email} = req.body;
-        connection.query('UPDATE users SET name = ? WHERE id = ?',[name,id],(err, result) => {
-            connection.release()
-            if (!err) {
-                res.send(`user with the record id ${name} has been added`)
-            }
-            else {
-                console.log(err)
-            }
-        })
-    })
-})
-
-
-
-
-
-
-
-//listen on env port or 500
-app.listen(port, () => console.log(`Listen on Port: ${port}`))

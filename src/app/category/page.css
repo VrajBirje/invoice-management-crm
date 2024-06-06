@@ -59,3 +59,43 @@
     align-items: center;
     justify-content: flex-start;
 }
+
+.personaldetails-content {
+    background-color: var(--color-white);
+    border-radius: 0 0 20px 20px;
+    width: 97%;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 15px;
+    flex-direction: column;
+}
+
+.pdetails-fieldvalue {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.pdetails-field {
+    color: var(--color-text);
+    width: 200px;
+}
+
+.pdetails-value {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.pdetails-input2 {
+    padding: 7px 28px 7px 10px;
+    width: 85%;
+}
+
+
+.pdetails-value-wrapper2 {
+    position: relative;
+    width: 100%;
+}

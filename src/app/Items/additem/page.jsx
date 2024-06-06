@@ -1,23 +1,28 @@
 "use client";
-import Sidebar from '@/Components/shared/Sidebar/sidebar'
-import { React, useState, useEffect } from 'react'
-import Topbar from '@/Components/shared/Topbar/topbar'
+import Sidebar from '@/Components/shared/Sidebar/sidebar';
+import { React, useState, useEffect } from 'react';
+import Topbar from '@/Components/shared/Topbar/topbar';
 import { MdMailOutline } from "react-icons/md";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { HiOutlineDocumentArrowUp } from "react-icons/hi2";
-import './page.css'
+import './page.css';
 import Button from '@/Components/common/Button/Button';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Page() {
     // State to store input field values
     const [formData, setFormData] = useState({
-        itemType: '',
-        productName: '',
-        sellingPrice: '',
-        unit: '',
+        itemType: null,
+        itemName: '',
+        sellingPrice: null,
+        unit: 1,
         documents: '',
-        description: ''
+        description: '',
+        createdDate: new Date().toISOString(), // default value
+        createdId: 2, // default value
+        updatedId: 2,
     });
 
     // Function to handle changes in input fields
@@ -26,6 +31,16 @@ export default function Page() {
         setFormData(prevState => ({
             ...prevState,
             [name]: value
+        }));
+    };
+
+    const handleChange2 = (e) => {
+        const { name, value } = e.target;
+        const intValue = parseInt(value, 10);
+
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: intValue
         }));
     };
 
@@ -38,6 +53,34 @@ export default function Page() {
         }));
     };
 
+    // Function to handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Prevent default form submission
+        try {
+            const response = await fetch('http://localhost:5000/item/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            if (response.ok) {
+                // Handle successful response
+                console.log('Item added successfully');
+                toast.success("Item added successfully")
+                window.location.href = '/Items'
+                // Reset form data or perform any other actions as needed
+            } else {
+                // Handle error response
+                console.error('Failed to add item');
+                toast.error("Failed to add the item")
+            }
+        } catch (error) {
+            toast.error("Failed to add the item")
+            console.error('Error adding item:', error);
+        }
+    };
+
     // Logging the formData object
     useEffect(() => {
         console.log(formData);
@@ -45,6 +88,7 @@ export default function Page() {
 
     return (
         <div className='customer-layout'>
+        <ToastContainer/>
             <Sidebar active="Items" settingsBool={false} masterBool={false} />
             <div className="mainpage-container">
                 <Topbar name="Add Items" />
@@ -60,13 +104,13 @@ export default function Page() {
                                 </div>
                                 <div className="pdetails-value">
                                     <div className="pdetails-value-opt">
-                                        <input type="radio" name='itemType' value="Product" onChange={handleChange} />
+                                        <input type="radio" name='itemType' value={1} onChange={handleChange2} />
                                         <div className="label2">
                                             Product
                                         </div>
                                     </div>
                                     <div className="pdetails-value-opt">
-                                        <input type="radio" name='itemType' value="Service" onChange={handleChange} />
+                                        <input type="radio" name='itemType' value={2} onChange={handleChange2} />
                                         <div className="label2">
                                             Service
                                         </div>
@@ -79,7 +123,7 @@ export default function Page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" name="productName" className='pdetails-input2' placeholder='Product Name' onChange={handleChange} />
+                                        <input type="text" name="itemName" className='pdetails-input2' placeholder='Product Name' onChange={handleChange} />
                                     </div>
                                 </div>
                             </div>
@@ -89,7 +133,7 @@ export default function Page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" name="sellingPrice" className='pdetails-input' placeholder='Ruppees' onChange={handleChange} />
+                                        <input type="text" name="sellingPrice" className='pdetails-input' placeholder='Rupees' onChange={handleChange2} />
                                         <FaIndianRupeeSign size={18} className='pdetails-icon' />
                                     </div>
                                 </div>
@@ -104,11 +148,11 @@ export default function Page() {
                                             type="text"
                                             name="unit"
                                             className='pdetails-input3'
-                                            placeholder='Mumbai'
-                                            onChange={handleChange}
+                                            placeholder='Unit'
+                                        // onChange={handleChange}
                                         >
                                             <option value="value">Unit</option>
-                                            <option value="value">options</option>
+                                            <option value="value">Options</option>
                                         </select>
                                     </div>
                                 </div>
@@ -120,7 +164,7 @@ export default function Page() {
                                 <div className="pdetails-value2">
                                     <div className="pdetials-doc-input">
                                         <div className="pdetails-value-wrapper2">
-                                            <input type="file" className='pdetails-input4' placeholder='abc@gmail.com' onChange={handleFileChange} />
+                                            <input type="file" className='pdetails-input4' placeholder='Documents' onChange={handleFileChange} />
                                             <HiOutlineDocumentArrowUp size={18} className='pdetails-icon' />
                                         </div>
                                         <div style={{ color: "#010080" }} className="label5">The file size should be lesser than 5 mb</div>
@@ -141,7 +185,7 @@ export default function Page() {
                                 <Button variant='round-outline'>
                                     Cancel
                                 </Button>
-                                <Button variant='round' >
+                                <Button variant='round' onClick={handleSubmit}>
                                     Save
                                 </Button>
                             </div>

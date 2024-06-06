@@ -9,7 +9,7 @@ import { HiOutlineDocumentArrowUp } from "react-icons/hi2";
 import './page.css'
 import Button from '@/Components/common/Button/Button';
 
-export default function page() {
+export default function Page() {
     const [tableRows, setTableRows] = useState([{ id: 1 }]);
 
     // Function to add a new row to the table

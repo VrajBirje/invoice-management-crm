@@ -12,17 +12,19 @@ import { Checkbox } from '@/Components/common/Checkbox/checkbox';
 import dataMain from '@/json/data';
 import { MdDeleteOutline } from "react-icons/md";
 import { LuClipboardEdit } from "react-icons/lu";
-import { LuMail } from "react-icons/lu";
-import { FiPhone } from "react-icons/fi";
+import Modal from '@/Components/common/Modal/modal';
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoMdArrowDropleft } from "react-icons/io";
+import Link from 'next/link';
 
-export default function page() {
+export default function Page() {
     const [searchTerm, setSearchTerm] = useState('');
     const [itemsPerPage, setItemsPerPage] = useState(10); // State for items per page
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const date = new Date();
+    const [showDeleteItemModal, setShowDeleteItemModal] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
     const activeDate = date.toLocaleDateString();
     const itemsPerPageOptions = [10, 15, 20, 25];
 
@@ -32,14 +34,32 @@ export default function page() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('https://dev-d478mkay4qiodj5.api.raw-labs.com/api/json');
+            const response = await fetch('http://localhost:5000/item/');
             const jsonData = await response.json();
-            // setData(jsonData);
-            setData(dataMain);
+            setData(jsonData);
+            // setData(dataMain);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
+
+    const handleDeleteItem = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/item/${itemToDelete}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                fetchData(); // Refresh data after deletion
+                console.log("success delete")
+                setShowDeleteItemModal(false);
+            } else {
+                console.error('Failed to delete item');
+            }
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
+    };
+
 
     // Filter data based on search term if there's a search term, otherwise return all data
     const filteredData = searchTerm
@@ -128,16 +148,18 @@ export default function page() {
                                             <Checkbox />
                                         </td>
                                         <td className='tableName'>
-                                            {item.name}
+                                            {item.itemName}
                                         </td>
                                         <td className='label2'>
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, suscipit.
+                                            {item.description}
                                         </td>
                                         <td className='label2'>Product</td>
                                         <td className='actionsTable'>
                                             <div className="table-contacts">
-                                                <MdDeleteOutline size={22} />
-                                                <LuClipboardEdit size={22} />
+                                                <MdDeleteOutline size={22} onClick={() => { setShowDeleteItemModal(true); setItemToDelete(item.Id); }} />
+                                                <Link href={{ pathname: '/Items/edititem', query: { Id:item.Id} }}>
+                                                    <LuClipboardEdit size={22} />
+                                                </Link>
                                             </div>
                                         </td>
                                     </tr>
@@ -168,6 +190,22 @@ export default function page() {
                     </div>
                 </div>
             </div>
+            {showDeleteItemModal && (
+                <Modal>
+                    <div className="modal-content">
+                        <div style={{ marginBottom: "10px" }}>
+                            <h5>Delete Item</h5>
+                        </div>
+                        <div className="modal-body" style={{ marginBottom: "20px" }}>
+                            Are you sure you want to delete this item?
+                        </div>
+                        <div className="modal-actions">
+                            <Button onClick={() => setShowDeleteItemModal(false)}>Cancel</Button>
+                            <Button variant="round-outline" onClick={handleDeleteItem}>Delete</Button>
+                        </div>
+                    </div>
+                </Modal>
+            )}
         </div>
     )
 }

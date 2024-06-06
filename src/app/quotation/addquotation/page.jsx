@@ -10,7 +10,7 @@ import './page.css'
 import Button from '@/Components/common/Button/Button';
 import items from '@/json/items';
 
-export default function page() {
+export default function Page() {
     const [tableRows, setTableRows] = useState([{ id: 1, item: items[0], quantity: 1, discount: 0, discountType: 'per', amount: items[0].price }]);
     const [totalAmount, setTotalAmount] = useState(tableRows[0].amount);
     const [adjustment, setAdjustment] = useState(0);
