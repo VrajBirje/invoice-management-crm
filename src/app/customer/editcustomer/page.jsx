@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
+import { useCookies } from 'react-cookie';
 
 const EditCustomer = () => {
     const [formData, setFormData] = useState({
@@ -31,41 +32,49 @@ const EditCustomer = () => {
         s_country: 1,
         s_state: 1,
         s_city: 1
-        });
+    });
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
 
     const [errors, setErrors] = useState({});
     const searchParams = useSearchParams();
     const customerId = searchParams.get('id');
-
+    // console.log(process.env.NEXT_PUBLIC_BACKEND_URL)
     useEffect(() => {
         // Fetch customer details when component mounts
         const fetchCustomerDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/customer/${customerId}`);
+                const response = await fetch(`http://localhost:5000/customer/${customerId}`,{
+                    headers:{
+                        'Authorization':`Bearer ${token}`
+                    }
+                });
                 const result = await response.json();
                 const resultJson = result.customer;
-                console.log(resultJson)
+                // console.log(resultJson)
                 setFormData(prevFormData => ({
-                ...prevFormData,
-                type: resultJson.type,
-                firstName: resultJson.firstName,
-                lastName: resultJson.lastName,
-                companyName: resultJson.companyName,
-                emailId: resultJson.emailId,
-                phoneNo: resultJson.phoneNo,
-                gstNo: resultJson.gstNo,
-                paymentTerms: resultJson.paymentTerms,
-                documents: resultJson.documents,
-                b_address: resultJson.b_address,
-                b_country: resultJson.b_country,
-                b_state: resultJson.b_state,
-                b_city: resultJson.b_city,
-                s_address: resultJson.s_address,
-                s_country: resultJson.s_country,
-                s_state: resultJson.s_state,
-                s_city: resultJson.s_city
-            }));
-                console.log(formData)
+                    ...prevFormData,
+                    type: resultJson.type,
+                    firstName: resultJson.firstName,
+                    lastName: resultJson.lastName,
+                    companyName: resultJson.companyName,
+                    emailId: resultJson.emailId,
+                    phoneNo: resultJson.phoneNo,
+                    gstNo: resultJson.gstNo,
+                    paymentTerms: resultJson.paymentTerms,
+                    documents: resultJson.documents,
+                    b_address: resultJson.b_address,
+                    b_country: resultJson.b_country,
+                    b_state: resultJson.b_state,
+                    b_city: resultJson.b_city,
+                    s_address: resultJson.s_address,
+                    s_country: resultJson.s_country,
+                    s_state: resultJson.s_state,
+                    s_city: resultJson.s_city,
+                    s_pincode:resultJson.s_pincode,
+                    b_pincode:resultJson.b_pincode,
+                }));
+                // console.log(formData)
             } catch (error) {
                 console.error('Error fetching customer details:', error);
             }
@@ -74,7 +83,7 @@ const EditCustomer = () => {
         if (customerId) {
             fetchCustomerDetails();
         }
-    }, [customerId, formData]);
+    }, [customerId]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -82,6 +91,7 @@ const EditCustomer = () => {
             ...prevState,
             [name]: value
         }));
+        console.log("hello")
         // Clear error message when input changes
         setErrors(prevErrors => ({
             ...prevErrors,
@@ -100,10 +110,11 @@ const EditCustomer = () => {
     const handleBlurEmail = async () => {
         console.log(formData.emailId)
         try {
-            const response = await fetch('http://localhost:5000/customer/check-email', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/customer/check-email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
                 },
                 body: JSON.stringify({ emailId: formData.emailId }),
             });
@@ -128,10 +139,11 @@ const EditCustomer = () => {
 
     const handleBlurPhone = async () => {
         try {
-            const response = await fetch('http://localhost:5000/customer/check-phone', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/customer/check-phone`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
                 },
                 body: JSON.stringify({ phoneNo: formData.phoneNo }),
             });
@@ -187,10 +199,11 @@ const EditCustomer = () => {
 
         // If no errors, proceed with form submission
         try {
-            const response = await fetch(`http://localhost:5000/customer/edit/${customerId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/customer/edit/${customerId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
                 },
                 body: JSON.stringify(formData),
             });
@@ -204,9 +217,9 @@ const EditCustomer = () => {
     };
 
     return (
-       
+
         <div className='customer-layout'>
-        <ToastContainer/>
+            <ToastContainer />
             <Sidebar active="Customer" settingsBool={false} masterBool={false} />
             <div className="mainpage-container">
                 <Topbar name="Add Customer" />
@@ -225,7 +238,7 @@ const EditCustomer = () => {
                                         <input
                                             type="radio"
                                             name='type'
-                                            value= "1" 
+                                            value="1"
                                             onChange={handleChange}
                                         />
                                         <div className="label2">
@@ -462,7 +475,7 @@ const EditCustomer = () => {
                                         </div>
                                         <div className="pdetails-value2">
                                             <div className="pdetails-value-wrapper2">
-                                                <input type="Number" name="b_pincode" className='pdetails-input2' placeholder='Pincode' onChange={handleChange} />
+                                                <input type="Number" name="b_pincode"  value={formData.b_pincode} className='pdetails-input2' placeholder='Pincode' onChange={handleChange} />
                                             </div>
                                         </div>
                                     </div>
@@ -542,7 +555,7 @@ const EditCustomer = () => {
                                         </div>
                                         <div className="pdetails-value2">
                                             <div className="pdetails-value-wrapper2">
-                                                <input type="Number" name="s_pincode" className='pdetails-input2' placeholder='Pincode' onChange={handleChange} />
+                                                <input type="Number" name="s_pincode"  value={formData.s_pincode} className='pdetails-input2' placeholder='Pincode' onChange={handleChange} />
                                             </div>
                                         </div>
                                     </div>
@@ -561,14 +574,14 @@ const EditCustomer = () => {
                 </form>
             </div>
         </div>
-        
+
     );
 }
 
 const Page = () => {
-    return(
+    return (
         <Suspense fallback={<div>Loading...</div>}>
-            <EditCustomer/>
+            <EditCustomer />
         </Suspense>
     )
 }

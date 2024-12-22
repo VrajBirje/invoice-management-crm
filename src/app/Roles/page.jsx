@@ -218,6 +218,7 @@ import Link from 'next/link';
 import Modal from '@/Components/common/Modal/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useCookies } from 'react-cookie';
 
 export default function Page() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -226,6 +227,9 @@ export default function Page() {
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [roleToDelete, setRoleToDelete] = useState({});
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
+
 
     useEffect(() => {
         fetchData();
@@ -233,7 +237,7 @@ export default function Page() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:5000/roles');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/roles`);
             const jsonData = await response.json();
             setData(jsonData.roles);
         } catch (error) {
@@ -279,10 +283,11 @@ export default function Page() {
     const confirmDelete = async () => {
         console.log(roleToDelete.Id)
         try {
-            const response = await fetch('http://localhost:5000/roles/delete', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/roles/delete`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
                 },
                 body: JSON.stringify({ roleId: roleToDelete.Id }),
             });

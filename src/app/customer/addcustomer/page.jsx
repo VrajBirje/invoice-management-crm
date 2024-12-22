@@ -9,6 +9,7 @@ import './page.css';
 import Button from '@/Components/common/Button/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useCookies } from 'react-cookie';
 
 export default function Page() {
     const [formData, setFormData] = useState({
@@ -32,6 +33,8 @@ export default function Page() {
     });
 
     const [errors, setErrors] = useState({});
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -57,10 +60,11 @@ export default function Page() {
     const handleBlurEmail = async () => {
         console.log(formData.emailId)
         try {
-            const response = await fetch('http://localhost:5000/customer/check-email', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/customer/check-email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
                 },
                 body: JSON.stringify({ emailId: formData.emailId }),
             });
@@ -85,10 +89,11 @@ export default function Page() {
 
     const handleBlurPhone = async () => {
         try {
-            const response = await fetch('http://localhost:5000/customer/check-phone', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/customer/check-phone`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
                 },
                 body: JSON.stringify({ phoneNo: formData.phoneNo }),
             });
@@ -144,10 +149,11 @@ export default function Page() {
 
         // If no errors, proceed with form submission
         try {
-            const response = await fetch('http://localhost:5000/customer/add', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/customer/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
                 },
                 body: JSON.stringify(formData),
             });

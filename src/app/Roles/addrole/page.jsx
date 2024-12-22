@@ -184,16 +184,24 @@ import './table.css';
 import Button from '@/Components/common/Button/Button';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useCookies } from 'react-cookie';
 
 export default function Page() {
     const [rolePermissions, setRolePermissions] = useState([]);
     const [roleName, setRoleName] = useState('');
     const [tableData, setTableData] = useState([]);
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:5000/roles/menu');
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/roles/menu`,{
+                    headers:{
+                        'Authorization':`Bearer ${token}`
+                    }
+                });
                 const jsonData = await response.json();
 
                 // Set menu IDs explicitly as per your instruction
@@ -240,10 +248,11 @@ export default function Page() {
         };
 
         try {
-            const response = await fetch('http://localhost:5000/roles/add', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/roles/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
                 },
                 body: JSON.stringify(payload),
             });

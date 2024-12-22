@@ -226,6 +226,7 @@ import { IoMdArrowDropright, IoMdArrowDropleft } from "react-icons/io";
 import Link from 'next/link';
 import Modal from '@/Components/common/Modal/Modal';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
 export default function Page() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -234,6 +235,9 @@ export default function Page() {
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
+    // console.log(token)
 
     useEffect(() => {
         fetchData();
@@ -241,7 +245,11 @@ export default function Page() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:5000/users/getAll');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/getAll`,{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             const jsonData = await response.json();
             setData(jsonData);
         } catch (error) {
@@ -252,7 +260,11 @@ export default function Page() {
     useEffect(() => {
         const fetchRoles = async () => {
             const updatedData = await Promise.all(data.map(async user => {
-                const roleResponse = await axios.get(`http://localhost:5000/roles/${user.roleId}`);
+                const roleResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/roles/${user.roleId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 const roleName = roleResponse.data.roleName;
                 return { ...user, roleName };
             }));
@@ -298,7 +310,11 @@ export default function Page() {
 
     const confirmDelete = async () => {
         try {
-            await axios.delete(`http://localhost:5000/users/delete/${userToDelete.Id}`);
+            await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/delete/${userToDelete.Id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             window.location.href = '/users';
         } catch (error) {
             console.error('Error deleting user:', error);
@@ -410,7 +426,7 @@ export default function Page() {
             {showModal && (
                 <Modal>
                     <div className="modal-content">
-                        <div style={{marginBottom:"10px"}}>
+                        <div style={{ marginBottom: "10px" }}>
                             <h5>Confirm Deletion</h5>
                         </div>
                         <div>

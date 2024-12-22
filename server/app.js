@@ -9,6 +9,7 @@ const categoryRoutes = require('./routes/categoryRoutes')
 const subCategoryRoutes = require('./routes/subCategoryRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const customerRoutes = require('./routes/customerRoutes');
+const quotationRoutes = require('./routes/quotationRoutes');
 const redis = require('redis');
 const cors = require('cors')
 
@@ -51,6 +52,7 @@ app.use('/category', categoryRoutes)
 app.use('/subcategory', subCategoryRoutes);
 app.use('/item', itemRoutes);
 app.use('/customer', customerRoutes);
+app.use('/quote', quotationRoutes); 
 
 // Listen on env port or 5000
 app.listen(port, () => console.log(`Server running at http://localhost:${port}/`));

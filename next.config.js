@@ -1,4 +1,6 @@
 module.exports = {
-    output: 'export',
+    // output: 'export',
+    images: { unoptimized: true },
+    // trailingSlash: true,
     // Other configurations if needed
   }

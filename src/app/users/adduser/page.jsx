@@ -67,7 +67,7 @@
 //             if (response.ok) {
 //                 console.log('User registered successfully:', data);
 //                 window.location.href = '/users';
-                
+
 //                 // Add your success handling logic here
 //             } else {
 //                 console.error('Error registering user:', data.error);
@@ -275,6 +275,7 @@ import { FiPhone } from "react-icons/fi";
 import { HiOutlineDocumentArrowUp } from "react-icons/hi2";
 import './page.css';
 import Button from '@/Components/common/Button/Button';
+import { useCookies } from 'react-cookie';
 
 export default function Page() {
     // State to store input field values with default values
@@ -282,7 +283,7 @@ export default function Page() {
         firstName: '',
         lastName: '',
         companyName: '',
-        roleId: 3,
+        roleId: 2,
         emailId: '',
         phoneNo: '',
         documents: '',
@@ -295,8 +296,8 @@ export default function Page() {
         createdId: 2, // default value
         updatedId: 2, // default value
         pincode: '000000', // default value
-        password: '', 
-        confirmPassword: '' 
+        password: '',
+        confirmPassword: ''
     });
 
     const [emailError, setEmailError] = useState("")
@@ -348,20 +349,22 @@ export default function Page() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
     // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!validateForm()) {
             return;
         }
 
         try {
-            const response = await fetch('http://localhost:5000/auth/register', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(formData)
             });
@@ -376,7 +379,7 @@ export default function Page() {
             } else {
                 console.error('Error registering user:', data.error);
                 toast.error('register failed: ' + data.error);
-                if(data.error = "User already exists with this email id"){
+                if (data.error = "User already exists with this email id") {
                     setEmailError("email Id already exists")
                     console.log("hello")
                 }
@@ -393,10 +396,11 @@ export default function Page() {
     const checkEmailExists = async (emailId) => {
         console.log("email")
         try {
-            const response = await fetch('http://localhost:5000/users/emailCheck', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/emailCheck`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ emailId })
             });
@@ -422,7 +426,7 @@ export default function Page() {
 
     return (
         <div className='customer-layout'>
-         <ToastContainer />
+            <ToastContainer />
             <Sidebar active="Users" settingsBool={false} masterBool={false} />
             <div className="mainpage-container">
                 <Topbar name="Add User" />
@@ -467,7 +471,7 @@ export default function Page() {
                                         <select
                                             name="role"
                                             className='pdetails-input3'
-                                            // onChange={handleChange}
+                                        // onChange={handleChange}
                                         >
                                             <option value="">Role</option>
                                             <option value="options">options</option>
@@ -481,7 +485,7 @@ export default function Page() {
                                 </div>
                                 <div className="pdetails-value2">
                                     <div className="pdetails-value-wrapper2">
-                                        <input type="text" name="emailId" className='pdetails-input' placeholder='Email' onChange={handleChange} onBlur={() => checkEmailExists(formData.emailId)}/>
+                                        <input type="text" name="emailId" className='pdetails-input' placeholder='Email' onChange={handleChange} onBlur={() => checkEmailExists(formData.emailId)} />
                                         {errors.emailId && <p className="error">{errors.emailId}</p>}
                                         {emailError != "" && <p className="error">Email id already exists</p>}
                                         <MdMailOutline size={18} className='pdetails-icon' />

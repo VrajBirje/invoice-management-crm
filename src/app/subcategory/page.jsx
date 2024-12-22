@@ -187,6 +187,7 @@ import { LuClipboardEdit } from "react-icons/lu";
 import { IoMdArrowDropright, IoMdArrowDropleft } from "react-icons/io";
 import Modal from '@/Components/common/Modal/Modal';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
 export default function Page() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -200,6 +201,8 @@ export default function Page() {
     const [editSubCategoryId, setEditSubCategoryId] = useState(null);
     const [editSubCategoryName, setEditSubCategoryName] = useState('');
     const [deleteSubCategoryId, setDeleteSubCategoryId] = useState(null);
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
 
     // useEffect(() => {
     //     fetchData();
@@ -218,7 +221,11 @@ export default function Page() {
 
     const fetchData = useCallback(async () => {
         try {
-            const response = await axios.get('http://localhost:5000/subcategory/getAll');
+            const response = await axios.get('http://localhost:5000/subcategory/getAll', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const transformedData = transformResponseData(response.data);
             setData(transformedData);
         } catch (error) {
@@ -263,7 +270,11 @@ export default function Page() {
 
     const handleAddSubCategory = async () => {
         try {
-            await axios.post('http://localhost:5000/subcategory/add', { createdId: 1, updatedId: 1, createdDate: datetime, subCategoryName: newSubCategoryName, categoryId: 3 });
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/subcategory/add`, { createdId: 1, updatedId: 1, createdDate: datetime, subCategoryName: newSubCategoryName, categoryId: 3 }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setShowAddSubCategoryModal(false);
             setNewSubCategoryName('');
             fetchData();
@@ -276,7 +287,11 @@ export default function Page() {
 
     const handleEditSubCategory = async () => {
         try {
-            await axios.put(`http://localhost:5000/subcategory/${editSubCategoryId}`, { createdId: 1, updatedId: 1, createdDate: datetime, subCategoryName: editSubCategoryName, categoryId: 3 });
+            await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/subcategory/${editSubCategoryId}`, { createdId: 1, updatedId: 1, createdDate: datetime, subCategoryName: editSubCategoryName, categoryId: 3 }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setShowEditSubCategoryModal(false);
             setEditSubCategoryId(null);
             setEditSubCategoryName('');
@@ -290,7 +305,11 @@ export default function Page() {
 
     const handleDeleteSubCategory = async () => {
         try {
-            await axios.delete(`http://localhost:5000/subcategory/${deleteSubCategoryId}`);
+            await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/subcategory/${deleteSubCategoryId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setShowDeleteSubCategoryModal(false);
             setDeleteSubCategoryId(null);
             fetchData();

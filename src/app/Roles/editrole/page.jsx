@@ -11,6 +11,7 @@ import PageLoader from '@/Components/common/PageLoader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Suspense } from 'react';
+import { useCookies } from 'react-cookie';
 
 const EditRole = () => {
     const [rolePermissions, setRolePermissions] = useState([]);
@@ -19,11 +20,18 @@ const EditRole = () => {
     const searchParams = useSearchParams();
     const roleId = searchParams.get('Id');
     console.log(roleId)
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:5000/roles/menu');
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/roles/menu`,{
+                    headers:{
+                        'Authorization':`Bearer ${token}`
+                    }
+                });
                 const jsonData = await response.json();
 
                 const updatedRoles = jsonData.roles.map((item, index) => ({
@@ -50,10 +58,11 @@ const EditRole = () => {
 
         const fetchRolePermissions = async () => {
             try {
-                const response = await fetch('http://localhost:5000/roles/permissions', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/roles/permissions`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization':`Bearer ${token}`
                     },
                     body: JSON.stringify({ roleId }),
                 });
@@ -92,10 +101,11 @@ const EditRole = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:5000/roles/edit', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/roles/edit`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
                 },
                 body: JSON.stringify(payload),
             });

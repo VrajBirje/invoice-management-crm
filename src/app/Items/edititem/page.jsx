@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
+import { useCookies } from 'react-cookie';
 
 const EditItem = () => {
     const searchParams = useSearchParams();
@@ -27,7 +28,12 @@ const EditItem = () => {
         createdDate: new Date().toISOString(), // default value
         createdId: 2, // default value
         updatedId: 2,
+        category:1,
+        subcategory:1,
     });
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
+
 
     useEffect(() => {
         if (itemId) {
@@ -37,7 +43,11 @@ const EditItem = () => {
 
     const fetchItemDetails = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5000/item/${id}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/item/${id}`,{
+                headers:{
+                    'Authorization':`Bearer ${token}`
+                }
+            });
             if (response.ok) {
                 const itemData = await response.json();
                 const itemData2 = itemData.item;
@@ -88,10 +98,11 @@ const EditItem = () => {
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
         try {
-            const response = await fetch(`http://localhost:5000/item/${itemId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/item/${itemId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
                 },
                 body: JSON.stringify(formData),
             });
@@ -159,6 +170,44 @@ const EditItem = () => {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="pdetails-fieldvalue">
+                                <div className="label2 pdetails-field">
+                                    Category
+                                </div>
+                                <div className="pdetails-value2">
+                                    <div className="pdetails-value-wrapper2">
+                                        <select
+                                            type="text"
+                                            name="paymentTerms"
+                                            className='pdetails-input3'
+                                            placeholder='Payment Terms'
+                                            onChange={handleChange}
+                                        >
+                                            <option value="value">options</option>
+                                            <option value="value">options</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="pdetails-fieldvalue">
+                                <div className="label2 pdetails-field">
+                                    Sub-Category
+                                </div>
+                                <div className="pdetails-value2">
+                                    <div className="pdetails-value-wrapper2">
+                                        <select
+                                            type="text"
+                                            name="paymentTerms"
+                                            className='pdetails-input3'
+                                            placeholder='Payment Terms'
+                                            onChange={handleChange}
+                                        >
+                                            <option value="value">options</option>
+                                            <option value="value">options</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                                 <div className="pdetails-fieldvalue">
                                     <div className="label2 pdetails-field">
                                         Selling Price

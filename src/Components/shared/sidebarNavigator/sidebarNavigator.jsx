@@ -70,7 +70,7 @@ function navigateSidebar(iconName) {
         case "Payments Recieved":
             return "/dashboard";
         case "Log Out":
-            return "/dashboard";
+            return "/";
         default:
             return null;
     }

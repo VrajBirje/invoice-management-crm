@@ -1,4 +1,5 @@
 "use client";
+import { useCookies } from 'react-cookie';
 import Sidebar from '@/Components/shared/Sidebar/sidebar';
 import { React, useState, useEffect } from 'react';
 import { IoMdArrowDropdown, IoMdArrowDropright, IoMdArrowDropleft } from "react-icons/io";
@@ -26,14 +27,22 @@ export default function Page() {
     const date = new Date();
     const activeDate = date.toLocaleDateString();
     const itemsPerPageOptions = [10, 15, 20, 25];
-
+    // console.log(process.env.NEXT_PUBLIC_BACKEND_URL)
     useEffect(() => {
         fetchData();
     }, []);
-
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:5000/customer/all');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/customer/all`,
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                }
+            );
             const jsonData = await response.json();
             setData(jsonData);
             // setData(dataMain);
@@ -44,8 +53,11 @@ export default function Page() {
 
     const handleDeleteSubCategory = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/customer/delete/${subCategoryToDelete}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/customer/delete/${subCategoryToDelete}`, {
                 method: 'DELETE',
+                headers:{
+                    'Authorization':`Bearer ${token}`
+                }
             });
             if (response.ok) {
                 setData(data.filter(item => item.Id !== subCategoryToDelete));
@@ -117,7 +129,7 @@ export default function Page() {
                             <Button variant='round-outline' suffixIcon={<IoMdArrowDropdown size={20} />}>
                                 Newest
                             </Button>
-                            <Button variant='round' link="/customer/addcustomer" prefixIcon={<RiAddFill size={20}/>}>
+                            <Button variant='round' link="/customer/addcustomer" prefixIcon={<RiAddFill size={20} />}>
                                 New Customer
                             </Button>
                         </div>

@@ -221,6 +221,7 @@ import { LuClipboardEdit } from "react-icons/lu";
 import { IoMdArrowDropright, IoMdArrowDropleft } from "react-icons/io";
 import Modal from '@/Components/common/Modal/Modal';
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
 export default function Page() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -234,6 +235,8 @@ export default function Page() {
     const [editCategoryId, setEditCategoryId] = useState(null);
     const [editCategoryName, setEditCategoryName] = useState('');
     const [deleteCategoryId, setDeleteCategoryId] = useState(null);
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
 
     useEffect(() => {
         fetchData();
@@ -241,7 +244,11 @@ export default function Page() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:5000/category/getAll');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/category/getAll`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             const jsonData = await response.json();
             setData(jsonData);
         } catch (error) {
@@ -282,7 +289,11 @@ export default function Page() {
 
     const handleAddCategory = async () => {
         try {
-            await axios.post('http://localhost:5000/category/add', { createdId: 1, updatedId: 1, createdDate: datetime, categoryName: newCategoryName });
+            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/category/add`, { createdId: 1, updatedId: 1, createdDate: datetime, categoryName: newCategoryName }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setShowAddCategoryModal(false);
             setNewCategoryName('');
             fetchData();
@@ -296,7 +307,11 @@ export default function Page() {
 
     const handleEditCategory = async () => {
         try {
-            await axios.put(`http://localhost:5000/category/${editCategoryId}`, { categoryName: editCategoryName });
+            await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/category/${editCategoryId}`, { categoryName: editCategoryName }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setShowEditCategoryModal(false);
             setEditCategoryId(null);
             setEditCategoryName('');
@@ -309,7 +324,11 @@ export default function Page() {
 
     const handleDeleteCategory = async () => {
         try {
-            await axios.delete(`http://localhost:5000/category/${deleteCategoryId}`);
+            await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/category/${deleteCategoryId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setShowDeleteCategoryModal(false);
             setDeleteCategoryId(null);
             fetchData();
@@ -321,7 +340,7 @@ export default function Page() {
 
     return (
         <div className='customer-layout'>
-        <ToastContainer/>
+            <ToastContainer />
             <Sidebar active="Category" settingsBool={false} masterBool={true} />
             <div className="mainpage-container">
                 <Topbar name="Category" />

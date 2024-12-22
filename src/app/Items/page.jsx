@@ -16,6 +16,7 @@ import Modal from '@/Components/common/Modal/modal';
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoMdArrowDropleft } from "react-icons/io";
 import Link from 'next/link';
+import { useCookies } from 'react-cookie';
 
 export default function Page() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -27,6 +28,9 @@ export default function Page() {
     const [itemToDelete, setItemToDelete] = useState(null);
     const activeDate = date.toLocaleDateString();
     const itemsPerPageOptions = [10, 15, 20, 25];
+    const [cookies] = useCookies(['token']);
+    const token = cookies.token;
+
 
     useEffect(() => {
         fetchData();
@@ -34,7 +38,11 @@ export default function Page() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:5000/item/');
+            const response = await fetch('http://localhost:5000/item/',{
+                headers:{
+                    'Authorization':`Bearer ${token}`
+                }
+            });
             const jsonData = await response.json();
             setData(jsonData);
             // setData(dataMain);
@@ -47,6 +55,9 @@ export default function Page() {
         try {
             const response = await fetch(`http://localhost:5000/item/${itemToDelete}`, {
                 method: 'DELETE',
+                headers:{
+                    'Authorization':`Bearer ${token}`
+                }
             });
             if (response.ok) {
                 fetchData(); // Refresh data after deletion
